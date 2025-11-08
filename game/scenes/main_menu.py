@@ -21,16 +21,16 @@ class MainMenuView(SceneBase):
         subtitle = "Press Enter to explore the glade"
         arcade.draw_text(
             title,
-            start_x=self.game_window.width / 2,
-            start_y=self.game_window.height * 0.6,
+            x=self.game_window.width / 2,
+            y=self.game_window.height * 0.6,
             color=arcade.color.ALMOND,
             font_size=64,
             anchor_x="center",
         )
         arcade.draw_text(
             subtitle,
-            start_x=self.game_window.width / 2,
-            start_y=self.game_window.height * 0.4,
+            x=self.game_window.width / 2,
+            y=self.game_window.height * 0.4,
             color=arcade.color.LIGHT_GRAY,
             font_size=24,
             anchor_x="center",
