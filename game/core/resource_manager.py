@@ -48,4 +48,4 @@ class ResourceManager:
         """Create a filled texture using Pillow for Arcade versions without ``create_filled``."""
 
         image = Image.new("RGBA", size, color)
-        return arcade.Texture(name, image=image)
+        return arcade.Texture(image=image, name=name)
