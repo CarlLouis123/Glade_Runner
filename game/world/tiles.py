@@ -28,6 +28,8 @@ MOUNTAIN = 7
 VOLCANO_ROCK = 8
 LAVA = 9
 BEACH_SAND = 10
+TOWN_WALL = 11
+GATE = 12
 
 
 _TILE_DEFS: Dict[int, TileDef] = {
@@ -42,6 +44,8 @@ _TILE_DEFS: Dict[int, TileDef] = {
     VOLCANO_ROCK: TileDef(VOLCANO_ROCK, "volcano_rock", (90, 60, 50), False),
     LAVA: TileDef(LAVA, "lava", (200, 60, 30), False),
     BEACH_SAND: TileDef(BEACH_SAND, "beach_sand", (210, 190, 120), True),
+    TOWN_WALL: TileDef(TOWN_WALL, "town_wall", (70, 70, 90), False),
+    GATE: TileDef(GATE, "gate", (130, 100, 60), False),
 }
 
 
@@ -67,5 +71,7 @@ __all__ = [
     "VOLCANO_ROCK",
     "LAVA",
     "BEACH_SAND",
+    "TOWN_WALL",
+    "GATE",
     "get_tile_def",
 ]

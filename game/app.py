@@ -38,6 +38,14 @@ class GameApp:
             sounds_dir=settings.SOUNDS_DIR,
             fonts_dir=settings.FONTS_DIR,
         )
+        for sound_name in [
+            "forest_ambient.ogg",
+            "farm_ambient.ogg",
+            "town_ambient.ogg",
+            "mountain_wind.ogg",
+            "volcano_rumble.ogg",
+        ]:
+            self.resources.load_sound(sound_name)
 
         # Current scene
         self.active_scene: SceneBase | None = None
