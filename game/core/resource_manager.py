@@ -29,12 +29,15 @@ class ResourceManager:
         self._image_cache[name] = image
         return image
 
-    def load_sound(self, name: str) -> pygame.mixer.Sound:
+    def load_sound(self, name: str) -> pygame.mixer.Sound | None:
         if name in self._sound_cache:
             return self._sound_cache[name]
 
         path = self.sounds_dir / name
-        sound = pygame.mixer.Sound(path.as_posix())
+        try:
+            sound = pygame.mixer.Sound(path.as_posix())
+        except (FileNotFoundError, pygame.error):
+            sound = None
         self._sound_cache[name] = sound
         return sound
 
