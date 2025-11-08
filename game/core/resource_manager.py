@@ -1,52 +1,41 @@
-# game/core/resource_manager.py
-from pathlib import Path
-import pygame
+"""Resource helpers for the Arcade implementation."""
+from __future__ import annotations
+
+from typing import Dict, Tuple
+
+import arcade
+
+from config import Settings, TILE_SIZE
+from game.world.tiles import TileDef
+
+Color = Tuple[int, int, int]
 
 
 class ResourceManager:
-    """
-    Simple resource manager with caching.
-    Extend this with sprite sheets, maps, etc.
-    """
+    """Very small cache for textures used throughout the game."""
 
-    def __init__(self, images_dir: Path, sounds_dir: Path, fonts_dir: Path):
-        self.images_dir = images_dir
-        self.sounds_dir = sounds_dir
-        self.fonts_dir = fonts_dir
+    def __init__(self, settings: Settings) -> None:
+        self.settings = settings
+        self._tile_textures: Dict[int, arcade.Texture] = {}
+        self._player_texture: arcade.Texture | None = None
 
-        self._image_cache: dict[str, pygame.Surface] = {}
-        self._sound_cache: dict[str, pygame.mixer.Sound] = {}
-        self._font_cache: dict[tuple[str, int], pygame.font.Font] = {}
+    def get_tile_texture(self, tile_def: TileDef) -> arcade.Texture:
+        """Return a cached filled texture for ``tile_def``."""
 
-    def load_image(self, name: str, colorkey=None) -> pygame.Surface:
-        if name in self._image_cache:
-            return self._image_cache[name]
+        if tile_def.id not in self._tile_textures:
+            color = (*tile_def.color, 255)
+            name = f"tile::{tile_def.name}::{TILE_SIZE}"
+            texture = arcade.Texture.create_filled(name, (TILE_SIZE, TILE_SIZE), color)
+            self._tile_textures[tile_def.id] = texture
+        return self._tile_textures[tile_def.id]
 
-        path = self.images_dir / name
-        image = pygame.image.load(path.as_posix()).convert_alpha()
-        if colorkey is not None:
-            image.set_colorkey(colorkey)
-        self._image_cache[name] = image
-        return image
+    def get_player_texture(self) -> arcade.Texture:
+        """Return the texture used by the player sprite."""
 
-    def load_sound(self, name: str) -> pygame.mixer.Sound | None:
-        if name in self._sound_cache:
-            return self._sound_cache[name]
-
-        path = self.sounds_dir / name
-        try:
-            sound = pygame.mixer.Sound(path.as_posix())
-        except (FileNotFoundError, pygame.error):
-            sound = None
-        self._sound_cache[name] = sound
-        return sound
-
-    def load_font(self, name: str, size: int) -> pygame.font.Font:
-        key = (name, size)
-        if key in self._font_cache:
-            return self._font_cache[key]
-
-        path = self.fonts_dir / name
-        font = pygame.font.Font(path.as_posix(), size)
-        self._font_cache[key] = font
-        return font
+        if self._player_texture is None:
+            color = (230, 85, 75, 255)
+            name = f"player::{TILE_SIZE}"
+            self._player_texture = arcade.Texture.create_filled(
+                name, (TILE_SIZE - 8, TILE_SIZE - 8), color
+            )
+        return self._player_texture

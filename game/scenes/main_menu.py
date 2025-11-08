@@ -1,46 +1,48 @@
-# game/scenes/main_menu.py
-import pygame
+"""Main menu view for the Arcade version of Glade Runner."""
+from __future__ import annotations
+
+import arcade
+
 from game.core.scene_base import SceneBase
-from game.scenes.gameplay import GameplayScene
+from game.world.map import WorldMap
 
 
-class MainMenuScene(SceneBase):
-    """
-    Simple starter main menu.
-    Press ENTER to start the game. ESC to quit.
-    """
+class MainMenuView(SceneBase):
+    """Simple title screen that lets the player start the adventure."""
 
-    def __init__(self, app):
-        super().__init__(app)
-        self.title_font = pygame.font.SysFont("arial", 64)
-        self.menu_font = pygame.font.SysFont("arial", 32)
+    def on_show_view(self) -> None:
+        arcade.set_background_color(arcade.color.DARK_SLATE_GRAY)
+        if self.window:
+            self.window.set_mouse_visible(True)
 
-    def handle_event(self, event: pygame.event.Event) -> None:
-        if event.type == pygame.QUIT:
-            self.app.quit()
+    def on_draw(self) -> None:
+        self.clear()
+        title = "Glade Runner"
+        subtitle = "Press Enter to explore the glade"
+        arcade.draw_text(
+            title,
+            start_x=self.game_window.width / 2,
+            start_y=self.game_window.height * 0.6,
+            color=arcade.color.ALMOND,
+            font_size=64,
+            anchor_x="center",
+        )
+        arcade.draw_text(
+            subtitle,
+            start_x=self.game_window.width / 2,
+            start_y=self.game_window.height * 0.4,
+            color=arcade.color.LIGHT_GRAY,
+            font_size=24,
+            anchor_x="center",
+        )
 
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_ESCAPE:
-                self.app.quit()
-            elif event.key in (pygame.K_RETURN, pygame.K_SPACE):
-                self.app.change_scene(GameplayScene(self.app))
+    def on_key_press(self, symbol: int, modifiers: int) -> None:
+        if symbol in (arcade.key.ENTER, arcade.key.RETURN, arcade.key.SPACE):
+            from .gameplay import GameplayView
 
-    def update(self, dt: float) -> None:
-        pass  # Add menu animations here later
-
-    def draw(self, surface: pygame.Surface) -> None:
-        surface.fill((10, 20, 30))
-
-        title_surf = self.title_font.render("Glade Runner", True, (200, 240, 255))
-        title_rect = title_surf.get_rect(center=(self.app.screen_rect.centerx, 200))
-        surface.blit(title_surf, title_rect)
-
-        msg = "Press ENTER to start"
-        msg_surf = self.menu_font.render(msg, True, (220, 220, 220))
-        msg_rect = msg_surf.get_rect(center=(self.app.screen_rect.centerx, 350))
-        surface.blit(msg_surf, msg_rect)
-
-        hint = "ESC to quit"
-        hint_surf = self.menu_font.render(hint, True, (180, 180, 180))
-        hint_rect = hint_surf.get_rect(center=(self.app.screen_rect.centerx, 400))
-        surface.blit(hint_surf, hint_rect)
+            world = WorldMap.generate(self.resources.settings)
+            gameplay = GameplayView(self.game_window, self.resources, world)
+            self.window.show_view(gameplay)
+        elif symbol == arcade.key.ESCAPE:
+            if self.window:
+                self.window.close()

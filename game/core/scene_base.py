@@ -1,36 +1,24 @@
-# game/core/scene_base.py
-import pygame
-from abc import ABC, abstractmethod
+"""Base scene/View abstraction for the Arcade implementation."""
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+import arcade
+
+if TYPE_CHECKING:  # pragma: no cover - for type checking only
+    from .resource_manager import ResourceManager
 
 
-class SceneBase(ABC):
-    """
-    Base class for all scenes (e.g. main menu, gameplay, pause menu).
-    """
+class SceneBase(arcade.View):
+    """Base class for all Glade Runner views."""
 
-    def __init__(self, app):
-        self.app = app
-        self.is_paused = False
+    def __init__(self, window: arcade.Window, resources: "ResourceManager") -> None:
+        super().__init__(window)
+        self.resources = resources
 
-    @abstractmethod
-    def handle_event(self, event: pygame.event.Event) -> None:
-        """Process a single Pygame event."""
-        raise NotImplementedError
+    @property
+    def game_window(self) -> arcade.Window:
+        """Return the :class:`arcade.Window` this view belongs to."""
 
-    @abstractmethod
-    def update(self, dt: float) -> None:
-        """Update scene logic."""
-        raise NotImplementedError
-
-    @abstractmethod
-    def draw(self, surface: pygame.Surface) -> None:
-        """Draw the scene."""
-        raise NotImplementedError
-
-    def on_enter(self, prev_scene: "SceneBase | None") -> None:
-        """Called when this scene becomes active."""
-        pass
-
-    def on_exit(self, next_scene: "SceneBase | None") -> None:
-        """Called when this scene is no longer active."""
-        pass
+        assert self.window is not None
+        return self.window

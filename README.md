@@ -1,14 +1,13 @@
-# Glade Runner – PyGame Skeleton
+# Glade Runner (Arcade Edition)
 
-A production-grade starter harness for a top‑down exploration game called **Glade Runner**, built with PyGame.
-This is designed to be expanded using iterative AI/Codex prompts.
+Glade Runner is a top-down exploration prototype now powered by the [Arcade](https://api.arcade.academy/en/latest/) framework.  The project demonstrates a clean view-based structure with hardware accelerated sprite rendering, a scrolling camera, and a procedurally themed overworld ready for expansion.
 
 ---
 
 ## Project structure
 
 ```text
-glade_runner/
+Glade_Runner/
 │
 ├─ run_game.py
 ├─ requirements.txt
@@ -36,10 +35,11 @@ glade_runner/
 │     ├─ __init__.py
 │     └─ player.py
 │
-└─ assets/
-   ├─ images/
-   ├─ sounds/
-   └─ fonts/
+└─ tests/
+   ├─ __init__.py
+   ├─ test_imports.py
+   ├─ test_instantiation.py
+   └─ test_invariants.py
 ```
 
 ---
@@ -59,43 +59,27 @@ glade_runner/
    pip install -r requirements.txt
    ```
 
-3. Run the game:
+3. Launch the game (opens an Arcade window):
 
    ```bash
    python run_game.py
    ```
 
----
+4. Run the automated test suite:
 
-## What’s included
-
-- **GameApp harness** (`game/app.py`) – main loop, scene management, FPS cap.
-- **Scene system** (`game/core/scene_base.py`) – base class for menu, gameplay, etc.
-- **Resource manager** (`game/core/resource_manager.py`) – cached loading for images, sounds, fonts.
-- **Camera** (`game/core/camera.py`) – 2D camera that follows the player in a larger world.
-- **Main menu scene** (`game/scenes/main_menu.py`) – start screen for Glade Runner.
-- **Gameplay scene** (`game/scenes/gameplay.py`) – top‑down world with a movable player and HUD.
-- **Player entity** (`game/entities/player.py`) – minimal character with WASD/arrow‑key movement.
-
-All of this is deliberately clean and modular so you can grow it with focused AI/Codex prompts.
+   ```bash
+   pytest
+   ```
 
 ---
 
-## Example expansion prompts (for Codex/AI)
+## Key features
 
-- `game/entities/player.py`  
-  > Add diagonal movement acceleration, friction, and a run key (Left Shift).
+- **Arcade window & view system** – `game/app.py` boots an `arcade.Window` and navigates between views.
+- **Scene hierarchy** – `game/core/scene_base.py` defines the shared base for menu and gameplay views.
+- **Sprite-based world** – `game/scenes/gameplay.py` builds sprite lists for terrain, walls, and the player.
+- **Camera tracking** – `game/core/camera.py` wraps `arcade.Camera2D` to follow the player around the world.
+- **Procedural overworld** – `game/world/map.py` generates themed regions (forest, farm, town, mountains, etc.).
+- **Test coverage** – `tests/` verifies imports, scene instantiation, and critical configuration invariants.
 
-- `game/scenes/gameplay.py`  
-  > Replace the placeholder world rectangle with a tile‑based map and basic collision with trees and rocks.
-
-- `game/core/resource_manager.py`  
-  > Extend this class to support loading sprite sheets and returning animation frames by name.
-
-- `game/core/camera.py`  
-  > Add smooth camera lag when following the player and a camera shake effect triggered by a function call.
-
-- `game/app.py`  
-  > Add a debug overlay toggled with F3, showing FPS, active scene name, and player coordinates.
-
-Use these as seeds and iterate to evolve **Glade Runner** into a full exploration game.
+Use the foundation to grow Glade Runner into a richer exploration experience—add quests, encounters, or entirely new biomes as you iterate.
