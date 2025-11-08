@@ -3,6 +3,8 @@ from __future__ import annotations
 
 import arcade
 
+from textwrap import dedent
+
 from game.core.scene_base import SceneBase
 from game.world.map import WorldMap
 
@@ -34,6 +36,16 @@ class MainMenuView(SceneBase):
             color=arcade.color.LIGHT_GRAY,
             font_size=24,
             anchor_x="center",
+        )
+        self._emit_headless_message(
+            dedent(
+                """
+                === Glade Runner – Main Menu ===
+                • Press Enter/Space to generate a new world.
+                • Press Esc to close the game.
+                (Graphical output is disabled in headless mode.)
+                """
+            )
         )
 
     def on_key_press(self, symbol: int, modifiers: int) -> None:
