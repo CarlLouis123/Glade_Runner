@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from textwrap import dedent
 
 import arcade
 
@@ -71,6 +72,16 @@ class GameplayView(SceneBase):
             self.sprite_lists.players.draw()
         with self.gui_camera.activate():
             self._draw_hud()
+        self._emit_headless_message(
+            dedent(
+                f"""
+                === Glade Runner – Gameplay Preview ===
+                World size: {self.world_map.width}×{self.world_map.height} tiles
+                Player speed: {self.player.speed:.0f} px/s
+                Controls: WASD/Arrow keys to move, Esc to return to the menu.
+                """
+            )
+        )
 
     def _draw_hud(self) -> None:
         text = "WASD / Arrow keys to move. ESC to return to menu."
