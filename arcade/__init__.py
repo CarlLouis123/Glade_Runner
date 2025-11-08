@@ -9,6 +9,12 @@ headless = True
 BACKGROUND_COLOR: tuple[int, int, int] | None = None
 
 
+# Keep track of windows created by the stub so ``run`` can provide a
+# lightweight simulation of the Arcade event loop. The real library manages
+# this internally; here we only need minimal behaviour for manual testing.
+_WINDOW_REGISTRY: list["Window"] = []
+
+
 class _ColorPalette:
     DARK_SLATE_GRAY = (47, 79, 79)
     ALMOND = (239, 222, 205)
@@ -130,10 +136,12 @@ class Window:
         self.closed = False
         self._mouse_visible = True
         self._current_view: View | None = None
+        _WINDOW_REGISTRY.append(self)
 
     def show_view(self, view: View) -> None:
         self._current_view = view
         view.window = self
+        view.on_show_view()
 
     def set_mouse_visible(self, visible: bool) -> None:
         self._mouse_visible = visible
@@ -146,6 +154,8 @@ class Window:
 
     def close(self) -> None:
         self.closed = True
+        if self in _WINDOW_REGISTRY:
+            _WINDOW_REGISTRY.remove(self)
 
 
 def set_background_color(color_value: Sequence[int]) -> None:
@@ -161,8 +171,41 @@ def check_for_collision_with_list(sprite: Sprite, sprite_list: Iterable[Sprite])
     return []
 
 
-def run() -> None:  # pragma: no cover - event loop omitted in tests
-    return
+def run() -> None:  # pragma: no cover - exercised manually, not in tests
+    """Simulate a very small portion of Arcade's event loop.
+
+    The real Arcade library hands control over to Pyglet which blocks until
+    all windows are closed.  In this kata we only ship a stub, so to avoid the
+    confusing "nothing happens" behaviour we iterate over any open windows,
+    trigger a draw on their active view and report what occurred.  This keeps
+    automated tests fast while still giving developers feedback when they run
+    ``run_game.py`` manually.
+    """
+
+    active_windows = [window for window in list(_WINDOW_REGISTRY) if not window.closed]
+    if not active_windows:
+        print("[Arcade stub] No open windows – nothing to run.")
+        return
+
+    for window in active_windows:
+        view = window._current_view
+        if view is not None:
+            view.on_draw()
+
+    if len(active_windows) == 1:
+        window_title = active_windows[0].title
+        print(
+            f"[Arcade stub] Simulated event loop for '{window_title}'. "
+            "No graphical output is available in this environment."
+        )
+    else:
+        print(
+            f"[Arcade stub] Simulated event loop for {len(active_windows)} windows. "
+            "No graphical output is available in this environment."
+        )
+
+    for window in active_windows:
+        window.close()
 
 
 __all__ = [
