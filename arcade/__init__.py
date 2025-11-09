@@ -1,10 +1,11 @@
 """Minimal Arcade stub used for headless testing."""
 from __future__ import annotations
 
-from contextlib import contextmanager, nullcontext
+from contextlib import contextmanager
 from dataclasses import dataclass
 from typing import Iterable, Iterator, List, Sequence
 
+__glade_runner_stub__ = True
 headless = True
 BACKGROUND_COLOR: tuple[int, int, int] | None = None
 
@@ -152,6 +153,9 @@ class Window:
     def clear(self) -> None:
         return
 
+    def set_caption(self, caption: str) -> None:
+        self.title = caption
+
     def close(self) -> None:
         self.closed = True
         if self in _WINDOW_REGISTRY:
@@ -169,6 +173,10 @@ def draw_text(*_args: object, **_kwargs: object) -> None:  # pragma: no cover - 
 
 def check_for_collision_with_list(sprite: Sprite, sprite_list: Iterable[Sprite]) -> list[Sprite]:
     return []
+
+
+def get_fps() -> float:
+    return 60.0
 
 
 def run() -> None:  # pragma: no cover - exercised manually, not in tests
@@ -217,6 +225,7 @@ __all__ = [
     "View",
     "Window",
     "check_for_collision_with_list",
+    "get_fps",
     "color",
     "draw_text",
     "headless",
