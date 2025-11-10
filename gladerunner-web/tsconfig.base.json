@@ -1,0 +1,32 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "useDefineForClassFields": true,
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "strict": true,
+    "jsx": "react-jsx",
+    "sourceMap": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "lib": ["DOM", "DOM.Iterable", "WebWorker", "ES2022"],
+    "types": ["vitest", "node"],
+    "noEmit": true,
+    "skipLibCheck": true,
+    "baseUrl": "./",
+    "paths": {
+      "@engine/*": ["src/engine/*"],
+      "@game/*": ["src/game/*"],
+      "@ui/*": ["src/ui/*"],
+      "@workers/*": ["src/workers/*"],
+      "@assets/*": ["src/assets/*"]
+    }
+  },
+  "include": ["src", "tests", "vite.config.ts"],
+  "references": [
+    {
+      "path": "./tsconfig.vitest.json"
+    }
+  ]
+}
