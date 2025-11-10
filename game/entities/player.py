@@ -33,7 +33,12 @@ class Player(arcade.Sprite):
     """Simple player sprite that supports smooth movement."""
 
     def __init__(self, texture: arcade.Texture, speed: float) -> None:
-        super().__init__(texture=texture, hit_box_algorithm="Simple")
+        # Never pass the texture into ``Sprite.__init__`` – Arcade may interpret the
+        # argument as both ``texture`` and ``filename`` which raises a duplicate
+        # keyword error on some versions. Initialise without the texture and assign
+        # it afterwards.
+        super().__init__(scale=1.0, hit_box_algorithm="Simple")
+        self.texture = texture
         self.speed = speed
         self.movement = MovementState()
         self._previous_position: tuple[float, float] = (0.0, 0.0)

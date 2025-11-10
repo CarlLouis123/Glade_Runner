@@ -42,6 +42,22 @@ class GameplayView(SceneBase):
 
     def _create_player(self) -> Player:
         player_texture = self.resources.get_player_texture()
+
+        # Guarantee we hand the ``Player`` an ``arcade.Texture``. Some resource
+        # helpers may return a filename or sprite wrapper, so normalise any such
+        # values here to avoid duplicate texture/filename kwargs being passed into
+        # ``arcade.Sprite``.
+        if isinstance(player_texture, str):
+            player_texture = arcade.load_texture(player_texture)
+        elif isinstance(player_texture, arcade.Sprite):
+            player_texture = player_texture.texture
+
+        if not isinstance(player_texture, arcade.Texture):  # Defensive: fail fast.
+            raise TypeError(
+                "Expected an arcade.Texture for the player sprite, got "
+                f"{type(player_texture)!r}"
+            )
+
         player = Player(player_texture, self.resources.settings.PLAYER_SPEED)
         start_x, start_y = self.world_map.start_pixel_position
         player.set_position_pixels(start_x, start_y)
