@@ -17,16 +17,16 @@ class MainMenuView(SceneBase):
         center_x = window.width / 2
         self.title_text = arcade.Text(
             "Glade Runner",
-            start_x=center_x,
-            start_y=window.height * 0.6,
+            center_x,
+            window.height * 0.6,
             color=arcade.color.ALMOND,
             font_size=64,
             anchor_x="center",
         )
         self.subtitle_text = arcade.Text(
             "Press Enter to explore the glade",
-            start_x=center_x,
-            start_y=window.height * 0.4,
+            center_x,
+            window.height * 0.4,
             color=arcade.color.LIGHT_GRAY,
             font_size=24,
             anchor_x="center",
