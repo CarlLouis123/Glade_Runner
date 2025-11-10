@@ -33,7 +33,7 @@ class Player(arcade.Sprite):
     """Simple player sprite that supports smooth movement."""
 
     def __init__(self, texture: arcade.Texture, speed: float) -> None:
-        super().__init__(texture, hit_box_algorithm="Simple")
+        super().__init__(texture=texture, hit_box_algorithm="Simple")
         self.speed = speed
         self.movement = MovementState()
         self._previous_position: tuple[float, float] = (0.0, 0.0)
