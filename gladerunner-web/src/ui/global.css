@@ -1,0 +1,38 @@
+:root {
+  --font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, 'Roboto', sans-serif;
+  --hud-background: rgba(0, 0, 0, 0.4);
+  --hud-color: #e6e6e6;
+  --accent: #5ad1ff;
+}
+
+html,
+body,
+#app {
+  height: 100%;
+  margin: 0;
+  background: #0b1020;
+  color: var(--hud-color);
+  font-family: var(--font-family);
+}
+
+#app {
+  position: relative;
+  overflow: hidden;
+}
+
+#hud {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  padding: 0.5rem 0.75rem;
+  background: var(--hud-background);
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+canvas {
+  display: block;
+  width: 100vw;
+  height: 100vh;
+  image-rendering: pixelated;
+}
