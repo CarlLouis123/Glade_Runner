@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 from contextlib import contextmanager
-from dataclasses import dataclass
 from typing import Iterable, Iterator, List, Sequence
 
 __glade_runner_stub__ = True
@@ -86,6 +85,32 @@ class SpriteList(List[Sprite]):
         for sprite in list(self):
             sprite.update(delta_time)
 
+
+class Text:
+    """Simplified text primitive mirroring :class:`arcade.Text`."""
+
+    def __init__(
+        self,
+        text: str,
+        start_x: float,
+        start_y: float,
+        color: Sequence[int],
+        font_size: float = 12,
+        *,
+        anchor_x: str = "left",
+        anchor_y: str = "baseline",
+        **_kwargs: object,
+    ) -> None:
+        self.text = text
+        self.x = start_x
+        self.y = start_y
+        self.color = color
+        self.font_size = font_size
+        self.anchor_x = anchor_x
+        self.anchor_y = anchor_y
+
+    def draw(self) -> None:  # pragma: no cover - drawing is skipped in tests
+        return
 
 class Camera2D:
     """Very small stand-in for :class:`arcade.Camera2D`."""
@@ -221,6 +246,7 @@ __all__ = [
     "Camera2D",
     "Sprite",
     "SpriteList",
+    "Text",
     "Texture",
     "View",
     "Window",

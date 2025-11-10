@@ -1,9 +1,9 @@
 """Main menu view for the Arcade version of Glade Runner."""
 from __future__ import annotations
 
-import arcade
-
 from textwrap import dedent
+
+import arcade
 
 from game.core.scene_base import SceneBase
 from game.world.map import WorldMap
@@ -12,31 +12,43 @@ from game.world.map import WorldMap
 class MainMenuView(SceneBase):
     """Simple title screen that lets the player start the adventure."""
 
+    def __init__(self, window: arcade.Window, resources) -> None:
+        super().__init__(window, resources)
+        center_x = window.width / 2
+        self.title_text = arcade.Text(
+            "Glade Runner",
+            start_x=center_x,
+            start_y=window.height * 0.6,
+            color=arcade.color.ALMOND,
+            font_size=64,
+            anchor_x="center",
+        )
+        self.subtitle_text = arcade.Text(
+            "Press Enter to explore the glade",
+            start_x=center_x,
+            start_y=window.height * 0.4,
+            color=arcade.color.LIGHT_GRAY,
+            font_size=24,
+            anchor_x="center",
+        )
+
     def on_show_view(self) -> None:
         arcade.set_background_color(arcade.color.DARK_SLATE_GRAY)
         if self.window:
             self.window.set_mouse_visible(True)
 
+    def on_resize(self, width: int, height: int) -> None:
+        super().on_resize(width, height)
+        center_x = width / 2
+        self.title_text.x = center_x
+        self.title_text.y = height * 0.6
+        self.subtitle_text.x = center_x
+        self.subtitle_text.y = height * 0.4
+
     def on_draw(self) -> None:
         self.clear()
-        title = "Glade Runner"
-        subtitle = "Press Enter to explore the glade"
-        arcade.draw_text(
-            title,
-            x=self.game_window.width / 2,
-            y=self.game_window.height * 0.6,
-            color=arcade.color.ALMOND,
-            font_size=64,
-            anchor_x="center",
-        )
-        arcade.draw_text(
-            subtitle,
-            x=self.game_window.width / 2,
-            y=self.game_window.height * 0.4,
-            color=arcade.color.LIGHT_GRAY,
-            font_size=24,
-            anchor_x="center",
-        )
+        self.title_text.draw()
+        self.subtitle_text.draw()
         self._emit_headless_message(
             dedent(
                 """
