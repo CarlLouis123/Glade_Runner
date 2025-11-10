@@ -30,6 +30,11 @@ LAVA = 9
 BEACH_SAND = 10
 TOWN_WALL = 11
 GATE = 12
+RIVER = 13
+BRIDGE = 14
+FLOWER_MEADOW = 15
+VILLAGE_HOUSE = 16
+VILLAGE_PATH = 17
 
 
 _TILE_DEFS: Dict[int, TileDef] = {
@@ -46,6 +51,11 @@ _TILE_DEFS: Dict[int, TileDef] = {
     BEACH_SAND: TileDef(BEACH_SAND, "beach_sand", (210, 190, 120), True),
     TOWN_WALL: TileDef(TOWN_WALL, "town_wall", (70, 70, 90), False),
     GATE: TileDef(GATE, "gate", (130, 100, 60), False),
+    RIVER: TileDef(RIVER, "river", (30, 110, 170), False),
+    BRIDGE: TileDef(BRIDGE, "bridge", (170, 140, 90), True),
+    FLOWER_MEADOW: TileDef(FLOWER_MEADOW, "flower_meadow", (90, 200, 120), True),
+    VILLAGE_HOUSE: TileDef(VILLAGE_HOUSE, "village_house", (180, 100, 90), False),
+    VILLAGE_PATH: TileDef(VILLAGE_PATH, "village_path", (190, 170, 140), True),
 }
 
 
@@ -73,5 +83,10 @@ __all__ = [
     "BEACH_SAND",
     "TOWN_WALL",
     "GATE",
+    "RIVER",
+    "BRIDGE",
+    "FLOWER_MEADOW",
+    "VILLAGE_HOUSE",
+    "VILLAGE_PATH",
     "get_tile_def",
 ]

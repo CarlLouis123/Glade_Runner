@@ -30,6 +30,13 @@ class GameplayView(SceneBase):
             window, world_map.pixel_width, world_map.pixel_height
         )
         self.gui_camera = arcade.Camera2D()
+        self.hud_text = arcade.Text(
+            "WASD / Arrow keys to move. ESC to return to menu.",
+            start_x=16,
+            start_y=16,
+            color=arcade.color.WHITE_SMOKE,
+            font_size=14,
+        )
         self.sprite_lists = self._create_sprite_lists()
         self.player = self._create_player()
         self._build_world_sprites()
@@ -101,14 +108,7 @@ class GameplayView(SceneBase):
         )
 
     def _draw_hud(self) -> None:
-        text = "WASD / Arrow keys to move. ESC to return to menu."
-        arcade.draw_text(
-            text,
-            16,
-            16,
-            arcade.color.WHITE_SMOKE,
-            14,
-        )
+        self.hud_text.draw()
 
     def on_update(self, delta_time: float) -> None:
         self.sprite_lists.players.update(delta_time)
