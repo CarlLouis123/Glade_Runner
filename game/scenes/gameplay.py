@@ -53,7 +53,8 @@ class GameplayView(SceneBase):
         for y in range(self.world_map.height):
             for x in range(self.world_map.width):
                 tile_def = self.world_map.tile_def_at(x, y)
-                sprite = arcade.Sprite(texture=self.resources.get_tile_texture(tile_def))
+                texture = self.resources.get_tile_texture(tile_def)
+                sprite = arcade.Sprite(texture)
                 sprite.center_x = x * TILE_SIZE + offset
                 sprite.center_y = y * TILE_SIZE + offset
                 self.sprite_lists.terrain.append(sprite)
