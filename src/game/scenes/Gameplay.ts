@@ -66,9 +66,9 @@ export class Gameplay implements Scene {
     this.tilemap = world.tilemap;
 
     const saved = load<SavedState | null>(SAVE_KEY, null);
-    const defaultStart = this.tileToWorld(108, 84);
-    const startX = saved?.player.x ?? defaultStart.x;
-    const startY = saved?.player.y ?? defaultStart.y;
+    const spawn = this.resolveSpawnPosition(saved?.player, { x: 108, y: 84 });
+    const startX = spawn.x;
+    const startY = spawn.y;
 
     this.player = this.ecs.createEntity();
     this.ecs.setPosition(this.player, { x: startX, y: startY });
@@ -420,6 +420,64 @@ export class Gameplay implements Scene {
       lines.push(currentLine);
     }
     return lines;
+  }
+
+  private resolveSpawnPosition(
+    saved: { x: number; y: number } | undefined,
+    defaultTile: { x: number; y: number }
+  ): { x: number; y: number } {
+    if (saved) {
+      if (this.canOccupy(saved.x, saved.y)) {
+        return saved;
+      }
+      const savedTile = this.tilemap.worldToTile(saved);
+      const nearestTile = this.findNearestWalkableTile(savedTile.x, savedTile.y);
+      return this.tileToWorld(nearestTile.x, nearestTile.y);
+    }
+
+    const fallbackTile = this.findNearestWalkableTile(defaultTile.x, defaultTile.y);
+    return this.tileToWorld(fallbackTile.x, fallbackTile.y);
+  }
+
+  private findNearestWalkableTile(tx: number, ty: number): { x: number; y: number } {
+    const width = this.tilemap.width;
+    const height = this.tilemap.height;
+    const startX = Math.max(0, Math.min(tx, width - 1));
+    const startY = Math.max(0, Math.min(ty, height - 1));
+    const seen = new Set<string>();
+    const queue: Array<{ x: number; y: number }> = [{ x: startX, y: startY }];
+    seen.add(`${startX},${startY}`);
+    const neighbors = [
+      { x: 1, y: 0 },
+      { x: -1, y: 0 },
+      { x: 0, y: 1 },
+      { x: 0, y: -1 }
+    ];
+
+    while (queue.length > 0) {
+      const current = queue.shift()!;
+
+      const tileId = this.tilemap.tileAt('collision', current.x, current.y);
+      if (tileId !== undefined && tileId !== 1) {
+        return current;
+      }
+
+      for (const offset of neighbors) {
+        const nx = current.x + offset.x;
+        const ny = current.y + offset.y;
+        if (nx < 0 || ny < 0 || nx >= width || ny >= height) {
+          continue;
+        }
+        const neighborKey = `${nx},${ny}`;
+        if (seen.has(neighborKey)) {
+          continue;
+        }
+        seen.add(neighborKey);
+        queue.push({ x: nx, y: ny });
+      }
+    }
+
+    return { x: startX, y: startY };
   }
 
   private tileToWorld(tx: number, ty: number): { x: number; y: number } {
