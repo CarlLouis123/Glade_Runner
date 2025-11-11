@@ -1,85 +1,55 @@
-# Glade Runner (Arcade Edition)
+# GladeRunner Web
 
-Glade Runner is a top-down exploration prototype now powered by the [Arcade](https://api.arcade.academy/en/latest/) framework.  The project demonstrates a clean view-based structure with hardware accelerated sprite rendering, a scrolling camera, and a procedurally themed overworld ready for expansion.
+GladeRunner Web is a browser-based reimagining of the GladeRunner project built with Vite, TypeScript, and a modular engine-first architecture. The project renders to an HTML canvas, organizes game logic with a lightweight ECS, and offloads heavy tasks (such as pathfinding) to background workers.
 
----
+> Looking for the original Python/Arcade build? The complete source now lives under [`arcade-edition/`](./arcade-edition/).
 
-## Project structure
+## Quick start
 
-```text
-Glade_Runner/
-│
-├─ run_game.py
-├─ requirements.txt
-│
-├─ config/
-│  ├─ __init__.py
-│  └─ settings.py
-│
-├─ game/
-│  ├─ __init__.py
-│  ├─ app.py
-│  │
-│  ├─ core/
-│  │  ├─ __init__.py
-│  │  ├─ scene_base.py
-│  │  ├─ resource_manager.py
-│  │  └─ camera.py
-│  │
-│  ├─ scenes/
-│  │  ├─ __init__.py
-│  │  ├─ main_menu.py
-│  │  └─ gameplay.py
-│  │
-│  └─ entities/
-│     ├─ __init__.py
-│     └─ player.py
-│
-└─ tests/
-   ├─ __init__.py
-   ├─ test_imports.py
-   ├─ test_instantiation.py
-   └─ test_invariants.py
+```bash
+npm install
+npm run dev
 ```
 
----
+Additional scripts:
 
-## Setup
+- `npm run build` – generate a production build in `dist/`
+- `npm run preview` – preview the production build
+- `npm run test` – execute the Vitest test suite
+- `npm run typecheck` – run the TypeScript compiler in `--noEmit` mode
+- `npm run lint` – lint the codebase with ESLint
+- `npm run format` – format sources with Prettier
 
-1. Create and activate a virtual environment (optional but recommended):
+## Project layout
 
-   ```bash
-   python -m venv .venv
-   source .venv/bin/activate  # Windows: .venv\Scripts\activate
-   ```
+```
+public/
+src/
+  engine/      # Rendering, ECS, resources, input, workers, math/time, save helpers
+  game/        # Scenes, gameplay configuration, telemetry helpers, migration notes
+  ui/          # Global styles and UI primitives
+  workers/     # Background workers and pure pathfinding logic
+  assets/      # Placeholder atlas metadata and texture references (no binaries committed)
+tests/         # Vitest unit tests for math, pathfinding, tilemaps
+```
 
-2. Install dependencies:
+Key entry points:
 
-   ```bash
-   pip install -r requirements.txt
-   ```
+- `src/main.ts` – boots the engine, registers global error handlers, and loads the initial scene
+- `src/engine/app.ts` – orchestrates the render loop, scene manager, HUD updates, and canvas resize handling
+- `src/game/scenes/` – scene implementations (`MainMenu`, `Gameplay`) that coordinate engine subsystems
 
-3. Launch the game (opens an Arcade window):
+## Module boundaries
 
-   ```bash
-   python run_game.py
-   ```
+- Engine modules (`src/engine/`) expose reusable systems and **must not import from `src/game/`**
+- Game scenes orchestrate ECS entities, renderer, and worker pool usage without embedding engine code
+- Workers exchange data via structured messages only; shared logic lives in pure helper modules under `src/workers/`
+- UI concerns live under `src/ui/` and interact with the DOM outside of core engine code
 
-4. Run the automated test suite:
+## Acceptance checklist
 
-   ```bash
-   pytest
-   ```
-
----
-
-## Key features
-
-- **Arcade window & view system** – `game/app.py` boots an `arcade.Window` and navigates between views.
-- **Scene hierarchy** – `game/core/scene_base.py` defines the shared base for menu and gameplay views.
-- **Sprite-based world** – `game/scenes/gameplay.py` builds sprite lists for terrain, walls, and the player.
-- **Camera tracking** – `game/core/camera.py` wraps `arcade.Camera2D` to follow the player around the world.
-- **Procedural overworld** – `game/world/map.py` generates themed regions (forest, farm, town, mountains, etc.).
-- **Test coverage** – `tests/` verifies imports, scene instantiation, and critical configuration invariants.
-
-Use the foundation to grow Glade Runner into a richer exploration experience—add quests, encounters, or entirely new biomes as you iterate.
+- `npm run dev` opens a playable canvas scene; press Enter to leave the menu and control the player with WASD/arrow keys
+- Camera smoothly follows the player and HUD shows scene/debug information
+- Press `F3` to toggle the debug grid overlay
+- Background worker returns pathfinding results that drive the NPC
+- `npm run build`, `npm run lint`, `npm run test`, and `npm run typecheck` complete without errors
