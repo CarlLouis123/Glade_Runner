@@ -2,6 +2,164 @@ import { resources } from './resources';
 import type { Vec2 } from './math';
 import { clamp, vec2Lerp } from './math';
 
+type ProceduralDrawer = (ctx: CanvasRenderingContext2D, w: number, h: number) => void;
+
+const COLOR_PALETTE: Record<string, string> = {
+  'ground:1': '#5fbc6d', // meadow
+  'ground:2': '#f2d082', // sandy beach
+  'ground:3': '#2676d1', // deep sea
+  'ground:4': '#8d6e63', // mountains
+  'ground:5': '#d84315', // volcanic crust
+  'ground:6': '#3f8c46', // dense forest floor
+  'ground:7': '#70c4e8', // lakes
+  'ground:8': '#bfa177', // cobblestone town
+  'ground:9': '#6a4c93', // enchanted glade
+  'ground:10': '#cfd8dc', // snowy peaks
+  'features:1': '#2e7d32',
+  'features:2': '#ffab40',
+  'features:3': '#6d4c41',
+  'features:4': '#ff7043',
+  'features:5': '#607d8b',
+  'features:6': '#0097a7',
+  'features:7': '#c0ca33',
+  player: '#f5f5f5',
+  'npc:traveler': '#ff8f00',
+  'npc:scholar': '#4fc3f7',
+  'npc:ranger': '#81c784',
+  'npc:oracle': '#ce93d8'
+};
+
+const createTreeDrawer = (leafColor: string): ProceduralDrawer => (ctx, w, h) => {
+  ctx.fillStyle = '#4e342e';
+  ctx.fillRect(-w * 0.1, h * 0.05, w * 0.2, h * 0.4);
+  ctx.beginPath();
+  ctx.fillStyle = leafColor;
+  ctx.arc(-w * 0.15, -h * 0.05, w * 0.25, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.beginPath();
+  ctx.arc(w * 0.15, -h * 0.05, w * 0.25, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.beginPath();
+  ctx.arc(0, -h * 0.25, w * 0.3, 0, Math.PI * 2);
+  ctx.fill();
+};
+
+const PROCEDURAL_DRAWERS: Record<string, ProceduralDrawer> = {
+  'features:1': createTreeDrawer('#2e7d32'),
+  'features:2': (ctx, w, h) => {
+    ctx.fillStyle = '#6d4c41';
+    ctx.fillRect(-w * 0.25, -h * 0.05, w * 0.5, h * 0.5);
+    ctx.beginPath();
+    ctx.moveTo(-w * 0.3, -h * 0.05);
+    ctx.lineTo(0, -h * 0.45);
+    ctx.lineTo(w * 0.3, -h * 0.05);
+    ctx.closePath();
+    ctx.fillStyle = '#ffcc80';
+    ctx.fill();
+    ctx.fillStyle = '#3e2723';
+    ctx.fillRect(-w * 0.06, h * 0.15, w * 0.12, h * 0.2);
+  },
+  'features:3': (ctx, w, h) => {
+    ctx.fillStyle = '#37474f';
+    ctx.fillRect(-w * 0.2, -h * 0.35, w * 0.4, h * 0.8);
+    ctx.fillStyle = '#90a4ae';
+    ctx.fillRect(-w * 0.05, -h * 0.3, w * 0.1, h * 0.18);
+    ctx.fillRect(-w * 0.05, -h * 0.05, w * 0.1, h * 0.18);
+    ctx.fillStyle = '#78909c';
+    ctx.beginPath();
+    ctx.arc(0, -h * 0.4, w * 0.22, 0, Math.PI, true);
+    ctx.fill();
+  },
+  'features:4': (ctx, w, h) => {
+    ctx.fillStyle = '#4e342e';
+    ctx.fillRect(-w * 0.12, h * 0.05, w * 0.24, h * 0.35);
+    ctx.beginPath();
+    ctx.moveTo(-w * 0.3, h * 0.05);
+    ctx.lineTo(0, -h * 0.45);
+    ctx.lineTo(w * 0.3, h * 0.05);
+    ctx.closePath();
+    ctx.fillStyle = '#d84315';
+    ctx.fill();
+    ctx.fillStyle = '#ffab91';
+    ctx.beginPath();
+    ctx.arc(0, -h * 0.2, w * 0.18, 0, Math.PI * 2);
+    ctx.fill();
+  },
+  'features:5': (ctx, w, h) => {
+    ctx.fillStyle = '#546e7a';
+    ctx.beginPath();
+    ctx.moveTo(-w * 0.4, h * 0.35);
+    ctx.lineTo(0, -h * 0.45);
+    ctx.lineTo(w * 0.4, h * 0.35);
+    ctx.closePath();
+    ctx.fill();
+    ctx.fillStyle = '#eceff1';
+    ctx.beginPath();
+    ctx.moveTo(-w * 0.2, h * 0.05);
+    ctx.lineTo(0, -h * 0.3);
+    ctx.lineTo(w * 0.2, h * 0.05);
+    ctx.closePath();
+    ctx.fill();
+  },
+  'features:6': (ctx, w, h) => {
+    ctx.fillStyle = '#006064';
+    ctx.fillRect(-w * 0.25, -h * 0.25, w * 0.5, h * 0.5);
+    ctx.fillStyle = '#4dd0e1';
+    ctx.beginPath();
+    ctx.arc(0, 0, w * 0.18, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = '#00acc1';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(0, -h * 0.35);
+    ctx.lineTo(0, h * 0.35);
+    ctx.moveTo(-w * 0.35, 0);
+    ctx.lineTo(w * 0.35, 0);
+    ctx.stroke();
+  },
+  'features:7': createTreeDrawer('#aeea00'),
+  'npc:traveler': (ctx, w, h) => {
+    ctx.fillStyle = '#ff8f00';
+    ctx.beginPath();
+    ctx.arc(0, -h * 0.25, w * 0.18, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#ffcc80';
+    ctx.fillRect(-w * 0.16, -h * 0.05, w * 0.32, h * 0.35);
+    ctx.fillStyle = '#5d4037';
+    ctx.fillRect(-w * 0.22, h * 0.3, w * 0.44, h * 0.1);
+  },
+  'npc:scholar': (ctx, w, h) => {
+    ctx.fillStyle = '#4fc3f7';
+    ctx.beginPath();
+    ctx.arc(0, -h * 0.25, w * 0.18, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#0277bd';
+    ctx.fillRect(-w * 0.16, -h * 0.05, w * 0.32, h * 0.35);
+    ctx.fillStyle = '#b0bec5';
+    ctx.fillRect(-w * 0.22, h * 0.3, w * 0.44, h * 0.1);
+  },
+  'npc:ranger': (ctx, w, h) => {
+    ctx.fillStyle = '#81c784';
+    ctx.beginPath();
+    ctx.arc(0, -h * 0.25, w * 0.18, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#2e7d32';
+    ctx.fillRect(-w * 0.16, -h * 0.05, w * 0.32, h * 0.35);
+    ctx.fillStyle = '#4e342e';
+    ctx.fillRect(-w * 0.22, h * 0.3, w * 0.44, h * 0.1);
+  },
+  'npc:oracle': (ctx, w, h) => {
+    ctx.fillStyle = '#ce93d8';
+    ctx.beginPath();
+    ctx.arc(0, -h * 0.25, w * 0.18, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#6a1b9a';
+    ctx.fillRect(-w * 0.16, -h * 0.05, w * 0.32, h * 0.35);
+    ctx.fillStyle = '#9575cd';
+    ctx.fillRect(-w * 0.22, h * 0.3, w * 0.44, h * 0.1);
+  }
+};
+
 export interface Camera {
   position: Vec2;
   viewportWidth: number;
@@ -82,11 +240,14 @@ export class Renderer {
     this.ctx.save();
     this.ctx.translate(screenPosition.x, screenPosition.y);
     this.ctx.scale(this.camera.zoom, this.camera.zoom);
+    const drawer = PROCEDURAL_DRAWERS[textureKey];
     if (texture?.image) {
       const { image, frame } = texture;
       this.ctx.drawImage(image, frame.x, frame.y, frame.w, frame.h, -w / 2, -h / 2, w, h);
+    } else if (drawer) {
+      drawer(this.ctx, w, h);
     } else {
-      this.ctx.fillStyle = this.colorForKey(textureKey);
+      this.ctx.fillStyle = this.resolveColor(textureKey);
       this.ctx.fillRect(-w / 2, -h / 2, w, h);
     }
     this.ctx.restore();
@@ -131,6 +292,18 @@ export class Renderer {
       x - w <= this.camera.viewportWidth &&
       y - h <= this.camera.viewportHeight
     );
+  }
+
+  private resolveColor(key: string): string {
+    const exact = COLOR_PALETTE[key];
+    if (exact) {
+      return exact;
+    }
+    const base = COLOR_PALETTE[key.split(':')[0]];
+    if (base) {
+      return base;
+    }
+    return this.colorForKey(key);
   }
 
   private colorForKey(key: string): string {
