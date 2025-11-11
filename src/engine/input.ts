@@ -44,15 +44,15 @@ export class InputManager {
   }
 
   isPressed(key: string): boolean {
-    return this.pressed.has(key);
+    return this.pressed.has(this.normalizeKey(key));
   }
 
   wasPressed(key: string): boolean {
-    return this.justPressed.has(key);
+    return this.justPressed.has(this.normalizeKey(key));
   }
 
   wasReleased(key: string): boolean {
-    return this.justReleased.has(key);
+    return this.justReleased.has(this.normalizeKey(key));
   }
 
   getPointer(): PointerState {
@@ -63,7 +63,7 @@ export class InputManager {
     if (event.repeat) {
       return;
     }
-    const key = event.key;
+    const key = this.normalizeKey(event.key);
     if (!this.pressed.has(key)) {
       this.pressed.add(key);
       this.justPressed.add(key);
@@ -71,7 +71,7 @@ export class InputManager {
   };
 
   private readonly handleKeyUp = (event: KeyboardEvent): void => {
-    const key = event.key;
+    const key = this.normalizeKey(event.key);
     if (this.pressed.has(key)) {
       this.pressed.delete(key);
       this.justReleased.add(key);
@@ -96,4 +96,11 @@ export class InputManager {
     this.justReleased.clear();
     this.pointer = { x: 0, y: 0, isDown: false };
   };
+
+  private normalizeKey(key: string): string {
+    if (key.length === 1) {
+      return key.toLowerCase();
+    }
+    return key;
+  }
 }

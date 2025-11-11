@@ -11,7 +11,7 @@ interface TextureEntry {
 }
 
 interface SpriteAtlasData {
-  image: string;
+  image?: string | null;
   frames: Record<string, SpriteFrame>;
 }
 
@@ -89,10 +89,13 @@ class ResourceManager {
     try {
       const atlas = await this.loadJSON<SpriteAtlasData>(url);
       let image: HTMLImageElement | null = null;
-      try {
-        image = await this.loadImage(atlas.image);
-      } catch (error) {
-        console.warn('Sprite atlas image missing, using fallback rectangles.', error);
+      const source = atlas.image ?? null;
+      if (source && !source.startsWith('@')) {
+        try {
+          image = await this.loadImage(source);
+        } catch (error) {
+          console.warn('Sprite atlas image missing, using fallback rectangles.', error);
+        }
       }
       for (const frameKey of Object.keys(atlas.frames)) {
         const frame = atlas.frames[frameKey];

@@ -66,8 +66,8 @@ export interface WorldLayers {
 }
 
 const createTilemapData = (): { data: TilemapData; layers: WorldLayers } => {
-  const width = 64;
-  const height = 48;
+  const width = 200;
+  const height = 160;
   const ground = new Array(width * height).fill(GroundTile.Meadow);
   const features = new Array(width * height).fill(FeatureTile.None);
   const collision = new Array(width * height).fill(0);
@@ -96,6 +96,63 @@ const createTilemapData = (): { data: TilemapData; layers: WorldLayers } => {
     }
   };
 
+  const tileNoise = (x: number, y: number): number => {
+    const value = Math.sin(x * 12.9898 + y * 78.233 + x * y * 0.001) * 43758.5453;
+    return value - Math.floor(value);
+  };
+
+  const paintRectangle = (
+    x0: number,
+    y0: number,
+    wRect: number,
+    hRect: number,
+    painter: (x: number, y: number) => void
+  ): void => {
+    const xStart = Math.max(0, Math.floor(x0));
+    const yStart = Math.max(0, Math.floor(y0));
+    const xEnd = Math.min(width, Math.ceil(x0 + wRect));
+    const yEnd = Math.min(height, Math.ceil(y0 + hRect));
+    for (let ty = yStart; ty < yEnd; ty += 1) {
+      for (let tx = xStart; tx < xEnd; tx += 1) {
+        painter(tx, ty);
+      }
+    }
+  };
+
+  const scatterTrees = (
+    region: { minX: number; maxX: number; minY: number; maxY: number },
+    density: number,
+    feature: FeatureTile,
+    block = false
+  ): void => {
+    for (let ty = region.minY; ty < region.maxY; ty += 1) {
+      for (let tx = region.minX; tx < region.maxX; tx += 1) {
+        if (!inBounds(tx, ty)) {
+          continue;
+        }
+        if (tileNoise(tx, ty) < density) {
+          addFeature(tx, ty, feature, block);
+        }
+      }
+    }
+  };
+
+  const placeTown = (
+    originX: number,
+    originY: number,
+    sizeX: number,
+    sizeY: number,
+    houseTiles: Array<{ x: number; y: number }>,
+    extras: Array<{ x: number; y: number; feature: FeatureTile; block?: boolean }> = []
+  ): void => {
+    paintRectangle(originX, originY, sizeX, sizeY, (x, y) => {
+      setGround(x, y, GroundTile.Town);
+      collision[index(x, y)] = 0;
+    });
+    houseTiles.forEach(({ x, y }) => addFeature(x, y, FeatureTile.House, true));
+    extras.forEach(({ x, y, feature, block }) => addFeature(x, y, feature, block ?? true));
+  };
+
   const paintCircle = (
     cx: number,
     cy: number,
@@ -115,7 +172,12 @@ const createTilemapData = (): { data: TilemapData; layers: WorldLayers } => {
     }
   };
 
-  const carvePath = (points: Array<{ x: number; y: number }>, widthTiles: number): void => {
+  const carvePath = (
+    points: Array<{ x: number; y: number }>,
+    widthTiles: number,
+    tile: GroundTile = GroundTile.Town,
+    options: { feature?: FeatureTile; block?: boolean } = {}
+  ): void => {
     const half = Math.floor(widthTiles / 2);
     points.reduce((prev, current) => {
       const dx = current.x - prev.x;
@@ -128,9 +190,17 @@ const createTilemapData = (): { data: TilemapData; layers: WorldLayers } => {
         for (let ox = -half; ox <= half; ox += 1) {
           for (let oy = -half; oy <= half; oy += 1) {
             if (inBounds(x + ox, y + oy)) {
-              setGround(x + ox, y + oy, GroundTile.Town);
-              collision[index(x + ox, y + oy)] = 0;
-              features[index(x + ox, y + oy)] = FeatureTile.None;
+              setGround(x + ox, y + oy, tile);
+              if (options.feature) {
+                addFeature(x + ox, y + oy, options.feature, options.block ?? false);
+              } else {
+                features[index(x + ox, y + oy)] = FeatureTile.None;
+              }
+              if (options.block ?? false) {
+                collision[index(x + ox, y + oy)] = 1;
+              } else {
+                collision[index(x + ox, y + oy)] = 0;
+              }
             }
           }
         }
@@ -139,170 +209,281 @@ const createTilemapData = (): { data: TilemapData; layers: WorldLayers } => {
     });
   };
 
-  // Shores and sea
+  // Sculpt sweeping coastlines and inland seas
   for (let y = 0; y < height; y += 1) {
+    const westCoast = 16 + Math.sin((y / height) * Math.PI * 1.2) * 6;
+    const eastCoast = width - (16 + Math.cos((y / height) * Math.PI * 1.1) * 7);
     for (let x = 0; x < width; x += 1) {
-      if (x < 2 || y < 2 || x >= width - 2 || y >= height - 2) {
+      const idx = index(x, y);
+      if (y < 2 || y >= height - 2 || x < 1 || x >= width - 1) {
         setGround(x, y, GroundTile.Sea);
         blockTile(x, y);
-      } else if (x < 5 || y < 5 || x >= width - 5 || y >= height - 5) {
+        continue;
+      }
+      if (x < westCoast - 2 || x > eastCoast + 2) {
+        setGround(x, y, GroundTile.Sea);
+        blockTile(x, y);
+        continue;
+      }
+      if (ground[idx] === GroundTile.Sea) {
+        continue;
+      }
+      if (y < 6 || y > height - 6 || x < westCoast + 1 || x > eastCoast - 1) {
         setGround(x, y, GroundTile.Beach);
       }
     }
   }
 
-  // Mountain range in the northwest
-  const mountainCenters = [
-    { x: 12, y: 10, radius: 7 },
-    { x: 8, y: 16, radius: 5 },
-    { x: 18, y: 18, radius: 4 }
-  ];
-  mountainCenters.forEach(({ x, y, radius }) => {
-    paintCircle(x, y, radius, (px, py, distance) => {
-      setGround(px, py, distance < radius * 0.4 ? GroundTile.Snow : GroundTile.Mountain);
-      if (distance < radius * 0.3) {
-        addFeature(px, py, FeatureTile.Peak, true);
-      } else if (distance > radius * 0.6 && (px + py) % 4 === 0) {
-        addFeature(px, py, FeatureTile.Tree, true);
-      } else {
-        blockTile(px, py);
-      }
-    });
-  });
-
-  // Volcano in the east
-  paintCircle(52, 16, 6, (x, y, distance) => {
-    setGround(x, y, GroundTile.Volcano);
+  // Southern bays and sheltered harbors
+  paintCircle(34, height - 28, 20, (x, y) => {
+    setGround(x, y, GroundTile.Sea);
     blockTile(x, y);
-    if (distance < 2.2) {
-      addFeature(x, y, FeatureTile.VolcanoCore, true);
+  });
+  paintCircle(34, height - 28, 26, (x, y) => {
+    if (ground[index(x, y)] !== GroundTile.Sea) {
+      setGround(x, y, GroundTile.Beach);
     }
   });
-  paintCircle(52, 16, 3.2, (x, y, distance) => {
-    setGround(x, y, GroundTile.Volcano);
-    if (distance > 2.6) {
-      collision[index(x, y)] = 0;
+  paintCircle(width - 32, height - 18, 16, (x, y) => {
+    setGround(x, y, GroundTile.Sea);
+    blockTile(x, y);
+  });
+  paintCircle(width - 32, height - 18, 22, (x, y) => {
+    if (ground[index(x, y)] !== GroundTile.Sea) {
+      setGround(x, y, GroundTile.Beach);
     }
   });
 
-  // Lake district in the south
-  const lakes = [
-    { x: 30, y: 36, radius: 4 },
-    { x: 36, y: 40, radius: 3 },
-    { x: 24, y: 40, radius: 2.5 }
+  // Rolling mountain spine across the north
+  const mountainRidges = [
+    { x: 72, y: 22, radius: 16 },
+    { x: 94, y: 18, radius: 14 },
+    { x: 120, y: 20, radius: 12 },
+    { x: 144, y: 24, radius: 11 }
   ];
-  lakes.forEach(({ x, y, radius }) => {
+  mountainRidges.forEach(({ x, y, radius }) => {
     paintCircle(x, y, radius, (px, py, distance) => {
-      setGround(px, py, GroundTile.Lake);
-      blockTile(px, py);
-      if (distance < radius * 0.45) {
-        addFeature(px, py, FeatureTile.FireflyTree, false);
+      if (distance < radius * 0.7) {
+        setGround(px, py, GroundTile.Mountain);
+      }
+      if (distance < radius * 0.4) {
+        setGround(px, py, GroundTile.Snow);
+        addFeature(px, py, FeatureTile.Peak, true);
+      } else if (distance < radius * 0.55 && tileNoise(px, py) > 0.7) {
+        addFeature(px, py, FeatureTile.Peak, true);
       }
     });
   });
 
-  paintCircle(34, 32, 5, (x, y) => {
-    if (ground[index(x, y)] === GroundTile.Meadow) {
-      setGround(x, y, GroundTile.Glade);
+  // High tundra to the northeast
+  paintRectangle(width - 40, 6, 30, 32, (x, y) => {
+    setGround(x, y, GroundTile.Snow);
+  });
+  scatterTrees({ minX: width - 36, maxX: width - 6, minY: 10, maxY: 36 }, 0.15, FeatureTile.Tree, true);
+
+  // Smoldering volcanic fields in the southeast
+  paintCircle(width - 52, height - 48, 16, (x, y, distance) => {
+    setGround(x, y, GroundTile.Volcano);
+    if (distance < 5) {
+      addFeature(x, y, FeatureTile.VolcanoCore, true);
+    } else if (distance < 9 && tileNoise(x, y) > 0.75) {
+      addFeature(x, y, FeatureTile.Peak, true);
     }
   });
 
-  // Dense forest to the southeast
-  for (let y = 30; y < 46; y += 1) {
-    for (let x = 42; x < 60; x += 1) {
+  // Jewel-toned glade at the heart of the world
+  paintCircle(108, 84, 14, (x, y, distance) => {
+    setGround(x, y, GroundTile.Glade);
+    collision[index(x, y)] = 0;
+    if (distance < 3) {
+      addFeature(x, y, FeatureTile.Obelisk, true);
+    } else if (distance < 11 && tileNoise(x, y) > 0.6) {
+      addFeature(x, y, FeatureTile.FireflyTree, false);
+    }
+  });
+
+  // Tranquil lakes peppered across the countryside
+  paintCircle(84, 92, 9, (x, y) => setGround(x, y, GroundTile.Lake));
+  paintCircle(120, 110, 7, (x, y) => setGround(x, y, GroundTile.Lake));
+  paintCircle(156, 128, 6, (x, y) => setGround(x, y, GroundTile.Lake));
+
+  // Verdant forests that sway with the wind
+  paintRectangle(58, 58, 72, 52, (x, y) => {
+    if (ground[index(x, y)] !== GroundTile.Glade) {
       setGround(x, y, GroundTile.Forest);
-      if ((x + y) % 3 === 0) {
-        addFeature(x, y, FeatureTile.Tree, true);
-      }
     }
-  }
+  });
+  scatterTrees({ minX: 58, maxX: 130, minY: 58, maxY: 110 }, 0.28, FeatureTile.Tree, true);
+  scatterTrees({ minX: 42, maxX: 80, minY: 116, maxY: 150 }, 0.22, FeatureTile.Tree, true);
 
-  // Clear forest paths
+  // Winding rivers carving through the landscape
+  const auroraRiver = [
+    { x: 90, y: 18 },
+    { x: 84, y: 44 },
+    { x: 72, y: 70 },
+    { x: 60, y: 100 },
+    { x: 48, y: 128 },
+    { x: 38, y: height - 26 }
+  ];
+  carvePath(auroraRiver, 5, GroundTile.Lake);
+
+  const silverRun = [
+    { x: 132, y: 30 },
+    { x: 128, y: 56 },
+    { x: 132, y: 82 },
+    { x: 150, y: 108 },
+    { x: width - 34, y: height - 22 }
+  ];
+  carvePath(silverRun, 4, GroundTile.Lake);
+
+  // Bridges spanning the rivers
   carvePath(
     [
-      { x: 44, y: 34 },
-      { x: 48, y: 34 },
-      { x: 52, y: 36 },
-      { x: 52, y: 40 }
+      { x: 62, y: 106 },
+      { x: 70, y: 106 }
     ],
-    3
+    3,
+    GroundTile.Town
   );
-
-  // Meadow glade centerpiece
-  addFeature(34, 30, FeatureTile.Obelisk, true);
-
-  // Harbor town in the southwest
-  for (let y = 30; y < 38; y += 1) {
-    for (let x = 8; x < 20; x += 1) {
-      setGround(x, y, GroundTile.Town);
-    }
-  }
-  [
-    { x: 10, y: 32 },
-    { x: 13, y: 34 },
-    { x: 16, y: 31 }
-  ].forEach(({ x, y }) => addFeature(x, y, FeatureTile.House, true));
-
-  // Observatory town near the mountains
-  for (let y = 12; y < 20; y += 1) {
-    for (let x = 24; x < 34; x += 1) {
-      setGround(x, y, GroundTile.Town);
-    }
-  }
-  addFeature(28, 14, FeatureTile.Tower, true);
-  addFeature(31, 16, FeatureTile.House, true);
-
-  // Paths connecting major landmarks
   carvePath(
     [
-      { x: 14, y: 34 },
-      { x: 22, y: 34 },
-      { x: 30, y: 32 },
-      { x: 36, y: 28 },
-      { x: 44, y: 22 },
-      { x: 52, y: 20 }
+      { x: 124, y: 86 },
+      { x: 136, y: 86 }
     ],
-    3
+    3,
+    GroundTile.Town
   );
-
   carvePath(
     [
-      { x: 28, y: 16 },
-      { x: 30, y: 22 },
-      { x: 32, y: 28 },
-      { x: 32, y: 36 }
+      { x: 156, y: 126 },
+      { x: 162, y: 126 }
     ],
-    2
+    3,
+    GroundTile.Town
   );
 
-  // Scenic bridges across lakes
+  // Four thriving towns with distinct characters
+  placeTown(
+    44,
+    height - 58,
+    24,
+    20,
+    [
+      { x: 48, y: height - 54 },
+      { x: 52, y: height - 48 },
+      { x: 58, y: height - 52 },
+      { x: 62, y: height - 46 }
+    ],
+    [{ x: 64, y: height - 50, feature: FeatureTile.Tower }]
+  );
+  placeTown(
+    92,
+    62,
+    22,
+    16,
+    [
+      { x: 96, y: 66 },
+      { x: 102, y: 70 },
+      { x: 106, y: 74 }
+    ],
+    [{ x: 104, y: 68, feature: FeatureTile.House }]
+  );
+  placeTown(
+    132,
+    32,
+    20,
+    14,
+    [
+      { x: 134, y: 36 },
+      { x: 140, y: 38 }
+    ],
+    [{ x: 142, y: 34, feature: FeatureTile.Tower }]
+  );
+  placeTown(
+    160,
+    100,
+    18,
+    18,
+    [
+      { x: 164, y: 108 },
+      { x: 170, y: 112 },
+      { x: 168, y: 104 }
+    ],
+    [{ x: 174, y: 108, feature: FeatureTile.House }]
+  );
+
+  // Illuminated paths connecting every settlement
   carvePath(
     [
-      { x: 28, y: 36 },
-      { x: 32, y: 36 },
-      { x: 36, y: 38 }
+      { x: 56, y: height - 50 },
+      { x: 74, y: 112 },
+      { x: 92, y: 96 },
+      { x: 108, y: 84 },
+      { x: 134, y: 68 },
+      { x: 150, y: 58 }
     ],
-    2
+    4,
+    GroundTile.Town
+  );
+  carvePath(
+    [
+      { x: 108, y: 84 },
+      { x: 116, y: 98 },
+      { x: 138, y: 118 },
+      { x: 160, y: 120 }
+    ],
+    3,
+    GroundTile.Town
+  );
+  carvePath(
+    [
+      { x: 108, y: 84 },
+      { x: 98, y: 120 },
+      { x: 112, y: 140 }
+    ],
+    3,
+    GroundTile.Town
+  );
+  carvePath(
+    [
+      { x: 150, y: 58 },
+      { x: width - 46, y: 46 },
+      { x: width - 30, y: 62 }
+    ],
+    3,
+    GroundTile.Town
   );
 
-  // Sprinkle decorative firefly trees around the glade
-  [
-    { x: 30, y: 28 },
-    { x: 38, y: 28 },
-    { x: 28, y: 34 },
-    { x: 40, y: 34 }
-  ].forEach(({ x, y }) => addFeature(x, y, FeatureTile.FireflyTree, true));
+  // Scenic observation points and monuments
+  addFeature(118, 70, FeatureTile.Tower, true);
+  addFeature(86, 120, FeatureTile.Obelisk, true);
+  addFeature(width - 44, 60, FeatureTile.Obelisk, true);
 
-  // Ensure town areas are walkable
-  for (let y = 10; y < 40; y += 1) {
-    for (let x = 6; x < 60; x += 1) {
+  // Promote soft banks around bodies of water
+  for (let y = 1; y < height - 1; y += 1) {
+    for (let x = 1; x < width - 1; x += 1) {
       const idx = index(x, y);
-      if (ground[idx] === GroundTile.Town || ground[idx] === GroundTile.Glade) {
-        collision[idx] = 0;
+      if (ground[idx] === GroundTile.Lake || ground[idx] === GroundTile.Sea) {
+        for (let oy = -1; oy <= 1; oy += 1) {
+          for (let ox = -1; ox <= 1; ox += 1) {
+            const nx = x + ox;
+            const ny = y + oy;
+            const nIdx = index(nx, ny);
+            if (ground[nIdx] === GroundTile.Meadow) {
+              setGround(nx, ny, GroundTile.Beach);
+            }
+          }
+        }
       }
     }
   }
 
+  // Keep town plazas and the glade traversable
+  for (let i = 0; i < ground.length; i += 1) {
+    if (ground[i] === GroundTile.Town || ground[i] === GroundTile.Glade) {
+      collision[i] = 0;
+    }
+  }
   const data: TilemapData = {
     tileSize: TILE_SIZE,
     width,
