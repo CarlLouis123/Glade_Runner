@@ -14,12 +14,16 @@ export class MiniMap {
   private readonly featureLayer: number[];
   private readonly canvas: HTMLCanvasElement;
   private readonly ctx: CanvasRenderingContext2D;
-  private readonly scale = 4;
+  private readonly scale: number;
 
   constructor(options: MiniMapOptions) {
     this.tilemap = options.tilemap;
     this.groundLayer = options.groundLayer;
     this.featureLayer = options.featureLayer;
+    this.scale = Math.max(
+      1,
+      Math.floor(220 / Math.max(this.tilemap.width, this.tilemap.height))
+    );
     this.canvas = document.createElement('canvas');
     this.canvas.width = this.tilemap.width;
     this.canvas.height = this.tilemap.height;

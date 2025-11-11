@@ -66,7 +66,7 @@ export class Gameplay implements Scene {
     this.tilemap = world.tilemap;
 
     const saved = load<SavedState | null>(SAVE_KEY, null);
-    const defaultStart = this.tileToWorld(24, 34);
+    const defaultStart = this.tileToWorld(108, 84);
     const startX = saved?.player.x ?? defaultStart.x;
     const startY = saved?.player.y ?? defaultStart.y;
 
@@ -230,7 +230,7 @@ export class Gameplay implements Scene {
   }
 
   private prepareNpcSprites(): void {
-    const spriteKeys = ['npc:traveler', 'npc:scholar', 'npc:ranger', 'npc:oracle'];
+    const spriteKeys = ['player', 'npc:traveler', 'npc:scholar', 'npc:ranger', 'npc:oracle'];
     spriteKeys.forEach((key) => {
       resources.registerTexture(key, null, { x: 0, y: 0, w: TILE_SIZE, h: TILE_SIZE });
     });
@@ -241,8 +241,8 @@ export class Gameplay implements Scene {
       {
         name: 'Iris the Traveler',
         spriteKey: 'npc:traveler',
-        startTile: { x: 14, y: 34 },
-        roamArea: { minX: 10, maxX: 22, minY: 30, maxY: 42 },
+        startTile: { x: 56, y: 116 },
+        roamArea: { minX: 50, maxX: 70, minY: 108, maxY: 126 },
         wisdom: [
           'Every horizon is just a promise to walk a little farther.',
           'Maps are love letters written to the curious.',
@@ -252,8 +252,8 @@ export class Gameplay implements Scene {
       {
         name: 'Sage Myrr',
         spriteKey: 'npc:scholar',
-        startTile: { x: 32, y: 20 },
-        roamArea: { minX: 28, maxX: 40, minY: 16, maxY: 26 },
+        startTile: { x: 104, y: 70 },
+        roamArea: { minX: 96, maxX: 116, minY: 62, maxY: 78 },
         wisdom: [
           'Volcanoes teach us that even fire can be patient.',
           'Listen to the glow of magma and you will hear the earth dreaming.',
@@ -263,8 +263,8 @@ export class Gameplay implements Scene {
       {
         name: 'Rolan of the Pines',
         spriteKey: 'npc:ranger',
-        startTile: { x: 46, y: 36 },
-        roamArea: { minX: 42, maxX: 54, minY: 32, maxY: 44 },
+        startTile: { x: 118, y: 96 },
+        roamArea: { minX: 110, maxX: 132, minY: 88, maxY: 108 },
         wisdom: [
           'Trees remember every whisper you offer them.',
           'Paths bloom where kindness walks first.',
@@ -274,8 +274,8 @@ export class Gameplay implements Scene {
       {
         name: 'Oracle Selene',
         spriteKey: 'npc:oracle',
-        startTile: { x: 36, y: 12 },
-        roamArea: { minX: 30, maxX: 44, minY: 8, maxY: 18 },
+        startTile: { x: 168, y: 110 },
+        roamArea: { minX: 158, maxX: 180, minY: 102, maxY: 122 },
         wisdom: [
           'Lakes mirror the sky so we may drink the stars.',
           'Stillness is the bravest voyage.',

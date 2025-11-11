@@ -1,9 +1,12 @@
 {
-  "image": "/src/assets/atlas.png",
+  "image": "@procedural",
   "frames": {
     "tiles:1": { "x": 0, "y": 0, "w": 32, "h": 32 },
     "tiles:2": { "x": 32, "y": 0, "w": 32, "h": 32 },
     "player": { "x": 64, "y": 0, "w": 32, "h": 32 },
-    "npc": { "x": 96, "y": 0, "w": 32, "h": 32 }
+    "npc:traveler": { "x": 96, "y": 0, "w": 32, "h": 32 },
+    "npc:scholar": { "x": 128, "y": 0, "w": 32, "h": 32 },
+    "npc:ranger": { "x": 160, "y": 0, "w": 32, "h": 32 },
+    "npc:oracle": { "x": 192, "y": 0, "w": 32, "h": 32 }
   }
 }
