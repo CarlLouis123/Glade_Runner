@@ -11,50 +11,152 @@ export interface SavedState {
 
 export enum GroundTile {
   Meadow = 1,
-  Beach = 2,
-  Sea = 3,
-  Mountain = 4,
-  Volcano = 5,
-  Forest = 6,
-  Lake = 7,
-  Town = 8,
-  Glade = 9,
-  Snow = 10
+  DirtRoad = 2,
+  CobblestoneRoad = 3,
+  Farmland = 4,
+  VegetablePlot = 5,
+  Orchard = 6,
+  Pasture = 7,
+  ShallowWater = 8,
+  DeepWater = 9,
+  Boardwalk = 10,
+  StoneBridge = 11,
+  HighlandGrass = 12,
+  Cliff = 13,
+  Marsh = 14,
+  Ruins = 15,
+  Plaza = 16,
+  CastleStone = 17,
+  Sand = 18,
+  Forest = 19,
+  MeadowDarker = 20
 }
 
 export enum FeatureTile {
   None = 0,
-  Tree = 1,
-  House = 2,
-  Tower = 3,
-  VolcanoCore = 4,
-  Peak = 5,
-  Obelisk = 6,
-  FireflyTree = 7
+  TreeOak = 1,
+  TreePine = 2,
+  TreeWillow = 3,
+  TreeFruit = 4,
+  House = 5,
+  Barn = 6,
+  Windmill = 7,
+  Fence = 8,
+  HayBale = 9,
+  Cart = 10,
+  Shrine = 11,
+  Animal = 12,
+  Watchfire = 13,
+  GuardTower = 14,
+  Palisade = 15,
+  Gate = 16,
+  MarketStall = 17,
+  Well = 18,
+  Blacksmith = 19,
+  Inn = 20,
+  Barrel = 21,
+  Crate = 22,
+  Campfire = 23,
+  Tent = 24,
+  ShrineStone = 25,
+  FishingHut = 26,
+  Boat = 27,
+  Net = 28,
+  Reeds = 29,
+  Duck = 30,
+  BridgeBanner = 31,
+  Gatehouse = 32,
+  Banner = 33,
+  Monastery = 34,
+  BellTower = 35,
+  Cairn = 36,
+  Grave = 37,
+  Lantern = 38,
+  DeadTree = 39,
+  Firefly = 40,
+  RuinedWall = 41,
+  CollapsedTower = 42,
+  BrokenStatue = 43,
+  Fountain = 44,
+  NobleHouse = 45,
+  CastleTower = 46,
+  TrainingDummy = 47,
+  TreeBush = 48
 }
 
 export const GROUND_COLORS: Record<GroundTile, string> = {
-  [GroundTile.Meadow]: '#5fbc6d',
-  [GroundTile.Beach]: '#f2d082',
-  [GroundTile.Sea]: '#2676d1',
-  [GroundTile.Mountain]: '#8d6e63',
-  [GroundTile.Volcano]: '#d84315',
-  [GroundTile.Forest]: '#3f8c46',
-  [GroundTile.Lake]: '#70c4e8',
-  [GroundTile.Town]: '#bfa177',
-  [GroundTile.Glade]: '#6a4c93',
-  [GroundTile.Snow]: '#cfd8dc'
+  [GroundTile.Meadow]: '#6da266',
+  [GroundTile.DirtRoad]: '#a0774a',
+  [GroundTile.CobblestoneRoad]: '#9a8d81',
+  [GroundTile.Farmland]: '#8b6b3a',
+  [GroundTile.VegetablePlot]: '#70522b',
+  [GroundTile.Orchard]: '#6f8a4f',
+  [GroundTile.Pasture]: '#7ca26d',
+  [GroundTile.ShallowWater]: '#63a7c1',
+  [GroundTile.DeepWater]: '#1e5075',
+  [GroundTile.Boardwalk]: '#a7784f',
+  [GroundTile.StoneBridge]: '#808487',
+  [GroundTile.HighlandGrass]: '#87a185',
+  [GroundTile.Cliff]: '#6d625c',
+  [GroundTile.Marsh]: '#4c5d3f',
+  [GroundTile.Ruins]: '#6d6a66',
+  [GroundTile.Plaza]: '#b4a48f',
+  [GroundTile.CastleStone]: '#a2a6ac',
+  [GroundTile.Sand]: '#c7a566',
+  [GroundTile.Forest]: '#4c7a45',
+  [GroundTile.MeadowDarker]: '#547d4e'
 };
 
 export const FEATURE_COLORS: Record<FeatureTile, string> = {
   [FeatureTile.None]: 'transparent',
-  [FeatureTile.Tree]: '#2e7d32',
-  [FeatureTile.House]: '#ffab40',
-  [FeatureTile.Tower]: '#607d8b',
-  [FeatureTile.VolcanoCore]: '#ff7043',
-  [FeatureTile.Peak]: '#eceff1',
-  [FeatureTile.Obelisk]: '#00acc1',
-  [FeatureTile.FireflyTree]: '#c0ca33'
+  [FeatureTile.TreeOak]: '#2e5b2d',
+  [FeatureTile.TreePine]: '#1f4b2a',
+  [FeatureTile.TreeWillow]: '#335a42',
+  [FeatureTile.TreeFruit]: '#4f7b33',
+  [FeatureTile.House]: '#c58f63',
+  [FeatureTile.Barn]: '#a4513d',
+  [FeatureTile.Windmill]: '#8f7c6b',
+  [FeatureTile.Fence]: '#b89a7a',
+  [FeatureTile.HayBale]: '#d8b24c',
+  [FeatureTile.Cart]: '#7c5734',
+  [FeatureTile.Shrine]: '#b5b1c8',
+  [FeatureTile.Animal]: '#d2b8a2',
+  [FeatureTile.Watchfire]: '#ffb347',
+  [FeatureTile.GuardTower]: '#7f8d96',
+  [FeatureTile.Palisade]: '#8b6238',
+  [FeatureTile.Gate]: '#6f5a3d',
+  [FeatureTile.MarketStall]: '#d77f5b',
+  [FeatureTile.Well]: '#7e9aa8',
+  [FeatureTile.Blacksmith]: '#4b4b4b',
+  [FeatureTile.Inn]: '#a67c52',
+  [FeatureTile.Barrel]: '#7a5635',
+  [FeatureTile.Crate]: '#6a4d2e',
+  [FeatureTile.Campfire]: '#ff6d3a',
+  [FeatureTile.Tent]: '#b78b5d',
+  [FeatureTile.ShrineStone]: '#9999af',
+  [FeatureTile.FishingHut]: '#7c6c52',
+  [FeatureTile.Boat]: '#55606a',
+  [FeatureTile.Net]: '#c8d3da',
+  [FeatureTile.Reeds]: '#5c7c52',
+  [FeatureTile.Duck]: '#c9d2d6',
+  [FeatureTile.BridgeBanner]: '#c04f43',
+  [FeatureTile.Gatehouse]: '#8d9096',
+  [FeatureTile.Banner]: '#9c3d3d',
+  [FeatureTile.Monastery]: '#c5c3b5',
+  [FeatureTile.BellTower]: '#b3b1a1',
+  [FeatureTile.Cairn]: '#817b73',
+  [FeatureTile.Grave]: '#7d7e7f',
+  [FeatureTile.Lantern]: '#f4d87a',
+  [FeatureTile.DeadTree]: '#4b3b2a',
+  [FeatureTile.Firefly]: '#dce569',
+  [FeatureTile.RuinedWall]: '#686764',
+  [FeatureTile.CollapsedTower]: '#707680',
+  [FeatureTile.BrokenStatue]: '#9fa3a6',
+  [FeatureTile.Fountain]: '#7aa7c4',
+  [FeatureTile.NobleHouse]: '#b89e7a',
+  [FeatureTile.CastleTower]: '#959ca8',
+  [FeatureTile.TrainingDummy]: '#b37d47',
+  [FeatureTile.TreeBush]: '#3c6b3b'
 };
 
 export interface WorldLayers {
@@ -66,8 +168,9 @@ export interface WorldLayers {
 }
 
 const createTilemapData = (): { data: TilemapData; layers: WorldLayers } => {
-  const width = 200;
-  const height = 160;
+  const width = 240;
+  const levelHeight = 40;
+  const height = levelHeight * 10;
   const ground = new Array(width * height).fill(GroundTile.Meadow);
   const features = new Array(width * height).fill(FeatureTile.None);
   const collision = new Array(width * height).fill(0);
@@ -119,40 +222,6 @@ const createTilemapData = (): { data: TilemapData; layers: WorldLayers } => {
     }
   };
 
-  const scatterTrees = (
-    region: { minX: number; maxX: number; minY: number; maxY: number },
-    density: number,
-    feature: FeatureTile,
-    block = false
-  ): void => {
-    for (let ty = region.minY; ty < region.maxY; ty += 1) {
-      for (let tx = region.minX; tx < region.maxX; tx += 1) {
-        if (!inBounds(tx, ty)) {
-          continue;
-        }
-        if (tileNoise(tx, ty) < density) {
-          addFeature(tx, ty, feature, block);
-        }
-      }
-    }
-  };
-
-  const placeTown = (
-    originX: number,
-    originY: number,
-    sizeX: number,
-    sizeY: number,
-    houseTiles: Array<{ x: number; y: number }>,
-    extras: Array<{ x: number; y: number; feature: FeatureTile; block?: boolean }> = []
-  ): void => {
-    paintRectangle(originX, originY, sizeX, sizeY, (x, y) => {
-      setGround(x, y, GroundTile.Town);
-      collision[index(x, y)] = 0;
-    });
-    houseTiles.forEach(({ x, y }) => addFeature(x, y, FeatureTile.House, true));
-    extras.forEach(({ x, y, feature, block }) => addFeature(x, y, feature, block ?? true));
-  };
-
   const paintCircle = (
     cx: number,
     cy: number,
@@ -172,318 +241,500 @@ const createTilemapData = (): { data: TilemapData; layers: WorldLayers } => {
     }
   };
 
-  const carvePath = (
-    points: Array<{ x: number; y: number }>,
-    widthTiles: number,
-    tile: GroundTile = GroundTile.Town,
-    options: { feature?: FeatureTile; block?: boolean } = {}
+  const scatterFeatures = (
+    region: { minX: number; maxX: number; minY: number; maxY: number },
+    density: number,
+    feature: FeatureTile,
+    block = false
   ): void => {
-    const half = Math.floor(widthTiles / 2);
-    points.reduce((prev, current) => {
-      const dx = current.x - prev.x;
-      const dy = current.y - prev.y;
-      const steps = Math.max(Math.abs(dx), Math.abs(dy));
-      for (let step = 0; step <= steps; step += 1) {
-        const t = steps === 0 ? 0 : step / steps;
-        const x = Math.round(prev.x + dx * t);
-        const y = Math.round(prev.y + dy * t);
-        for (let ox = -half; ox <= half; ox += 1) {
-          for (let oy = -half; oy <= half; oy += 1) {
-            if (inBounds(x + ox, y + oy)) {
-              setGround(x + ox, y + oy, tile);
-              if (options.feature) {
-                addFeature(x + ox, y + oy, options.feature, options.block ?? false);
-              } else {
-                features[index(x + ox, y + oy)] = FeatureTile.None;
-              }
-              if (options.block ?? false) {
-                collision[index(x + ox, y + oy)] = 1;
-              } else {
-                collision[index(x + ox, y + oy)] = 0;
-              }
-            }
-          }
+    for (let ty = region.minY; ty < region.maxY; ty += 1) {
+      for (let tx = region.minX; tx < region.maxX; tx += 1) {
+        if (!inBounds(tx, ty)) {
+          continue;
+        }
+        if (tileNoise(tx, ty) < density) {
+          addFeature(tx, ty, feature, block);
         }
       }
-      return current;
-    });
+    }
   };
 
-  // Sculpt sweeping coastlines and inland seas
-  for (let y = 0; y < height; y += 1) {
-    const westCoast = 16 + Math.sin((y / height) * Math.PI * 1.2) * 6;
-    const eastCoast = width - (16 + Math.cos((y / height) * Math.PI * 1.1) * 7);
-    for (let x = 0; x < width; x += 1) {
-      const idx = index(x, y);
-      if (y < 2 || y >= height - 2 || x < 1 || x >= width - 1) {
-        setGround(x, y, GroundTile.Sea);
-        blockTile(x, y);
-        continue;
-      }
-      if (x < westCoast - 2 || x > eastCoast + 2) {
-        setGround(x, y, GroundTile.Sea);
-        blockTile(x, y);
-        continue;
-      }
-      if (ground[idx] === GroundTile.Sea) {
-        continue;
-      }
-      if (y < 6 || y > height - 6 || x < westCoast + 1 || x > eastCoast - 1) {
-        setGround(x, y, GroundTile.Beach);
-      }
-    }
-  }
-
-  // Southern bays and sheltered harbors
-  paintCircle(34, height - 28, 20, (x, y) => {
-    setGround(x, y, GroundTile.Sea);
-    blockTile(x, y);
-  });
-  paintCircle(34, height - 28, 26, (x, y) => {
-    if (ground[index(x, y)] !== GroundTile.Sea) {
-      setGround(x, y, GroundTile.Beach);
-    }
-  });
-  paintCircle(width - 32, height - 18, 16, (x, y) => {
-    setGround(x, y, GroundTile.Sea);
-    blockTile(x, y);
-  });
-  paintCircle(width - 32, height - 18, 22, (x, y) => {
-    if (ground[index(x, y)] !== GroundTile.Sea) {
-      setGround(x, y, GroundTile.Beach);
-    }
-  });
-
-  // Rolling mountain spine across the north
-  const mountainRidges = [
-    { x: 72, y: 22, radius: 16 },
-    { x: 94, y: 18, radius: 14 },
-    { x: 120, y: 20, radius: 12 },
-    { x: 144, y: 24, radius: 11 }
-  ];
-  mountainRidges.forEach(({ x, y, radius }) => {
-    paintCircle(x, y, radius, (px, py, distance) => {
-      if (distance < radius * 0.7) {
-        setGround(px, py, GroundTile.Mountain);
-      }
-      if (distance < radius * 0.4) {
-        setGround(px, py, GroundTile.Snow);
-        addFeature(px, py, FeatureTile.Peak, true);
-      } else if (distance < radius * 0.55 && tileNoise(px, py) > 0.7) {
-        addFeature(px, py, FeatureTile.Peak, true);
-      }
-    });
-  });
-
-  // High tundra to the northeast
-  paintRectangle(width - 40, 6, 30, 32, (x, y) => {
-    setGround(x, y, GroundTile.Snow);
-  });
-  scatterTrees({ minX: width - 36, maxX: width - 6, minY: 10, maxY: 36 }, 0.15, FeatureTile.Tree, true);
-
-  // Smoldering volcanic fields in the southeast
-  paintCircle(width - 52, height - 48, 16, (x, y, distance) => {
-    setGround(x, y, GroundTile.Volcano);
-    if (distance < 5) {
-      addFeature(x, y, FeatureTile.VolcanoCore, true);
-    } else if (distance < 9 && tileNoise(x, y) > 0.75) {
-      addFeature(x, y, FeatureTile.Peak, true);
-    }
-  });
-
-  // Jewel-toned glade at the heart of the world
-  paintCircle(108, 84, 14, (x, y, distance) => {
-    setGround(x, y, GroundTile.Glade);
-    collision[index(x, y)] = 0;
-    if (distance < 3) {
-      addFeature(x, y, FeatureTile.Obelisk, true);
-    } else if (distance < 11 && tileNoise(x, y) > 0.6) {
-      addFeature(x, y, FeatureTile.FireflyTree, false);
-    }
-  });
-
-  // Tranquil lakes peppered across the countryside
-  paintCircle(84, 92, 9, (x, y) => setGround(x, y, GroundTile.Lake));
-  paintCircle(120, 110, 7, (x, y) => setGround(x, y, GroundTile.Lake));
-  paintCircle(156, 128, 6, (x, y) => setGround(x, y, GroundTile.Lake));
-
-  // Verdant forests that sway with the wind
-  paintRectangle(58, 58, 72, 52, (x, y) => {
-    if (ground[index(x, y)] !== GroundTile.Glade) {
-      setGround(x, y, GroundTile.Forest);
-    }
-  });
-  scatterTrees({ minX: 58, maxX: 130, minY: 58, maxY: 110 }, 0.28, FeatureTile.Tree, true);
-  scatterTrees({ minX: 42, maxX: 80, minY: 116, maxY: 150 }, 0.22, FeatureTile.Tree, true);
-
-  // Winding rivers carving through the landscape
-  const auroraRiver = [
-    { x: 90, y: 18 },
-    { x: 84, y: 44 },
-    { x: 72, y: 70 },
-    { x: 60, y: 100 },
-    { x: 48, y: 128 },
-    { x: 38, y: height - 26 }
-  ];
-  carvePath(auroraRiver, 5, GroundTile.Lake);
-
-  const silverRun = [
-    { x: 132, y: 30 },
-    { x: 128, y: 56 },
-    { x: 132, y: 82 },
-    { x: 150, y: 108 },
-    { x: width - 34, y: height - 22 }
-  ];
-  carvePath(silverRun, 4, GroundTile.Lake);
-
-  // Bridges spanning the rivers
-  carvePath(
-    [
-      { x: 62, y: 106 },
-      { x: 70, y: 106 }
-    ],
-    3,
-    GroundTile.Town
-  );
-  carvePath(
-    [
-      { x: 124, y: 86 },
-      { x: 136, y: 86 }
-    ],
-    3,
-    GroundTile.Town
-  );
-  carvePath(
-    [
-      { x: 156, y: 126 },
-      { x: 162, y: 126 }
-    ],
-    3,
-    GroundTile.Town
-  );
-
-  // Four thriving towns with distinct characters
-  placeTown(
-    44,
-    height - 58,
-    24,
-    20,
-    [
-      { x: 48, y: height - 54 },
-      { x: 52, y: height - 48 },
-      { x: 58, y: height - 52 },
-      { x: 62, y: height - 46 }
-    ],
-    [{ x: 64, y: height - 50, feature: FeatureTile.Tower }]
-  );
-  placeTown(
-    92,
-    62,
-    22,
-    16,
-    [
-      { x: 96, y: 66 },
-      { x: 102, y: 70 },
-      { x: 106, y: 74 }
-    ],
-    [{ x: 104, y: 68, feature: FeatureTile.House }]
-  );
-  placeTown(
-    132,
-    32,
-    20,
-    14,
-    [
-      { x: 134, y: 36 },
-      { x: 140, y: 38 }
-    ],
-    [{ x: 142, y: 34, feature: FeatureTile.Tower }]
-  );
-  placeTown(
-    160,
-    100,
-    18,
-    18,
-    [
-      { x: 164, y: 108 },
-      { x: 170, y: 112 },
-      { x: 168, y: 104 }
-    ],
-    [{ x: 174, y: 108, feature: FeatureTile.House }]
-  );
-
-  // Illuminated paths connecting every settlement
-  carvePath(
-    [
-      { x: 56, y: height - 50 },
-      { x: 74, y: 112 },
-      { x: 92, y: 96 },
-      { x: 108, y: 84 },
-      { x: 134, y: 68 },
-      { x: 150, y: 58 }
-    ],
-    4,
-    GroundTile.Town
-  );
-  carvePath(
-    [
-      { x: 108, y: 84 },
-      { x: 116, y: 98 },
-      { x: 138, y: 118 },
-      { x: 160, y: 120 }
-    ],
-    3,
-    GroundTile.Town
-  );
-  carvePath(
-    [
-      { x: 108, y: 84 },
-      { x: 98, y: 120 },
-      { x: 112, y: 140 }
-    ],
-    3,
-    GroundTile.Town
-  );
-  carvePath(
-    [
-      { x: 150, y: 58 },
-      { x: width - 46, y: 46 },
-      { x: width - 30, y: 62 }
-    ],
-    3,
-    GroundTile.Town
-  );
-
-  // Scenic observation points and monuments
-  addFeature(118, 70, FeatureTile.Tower, true);
-  addFeature(86, 120, FeatureTile.Obelisk, true);
-  addFeature(width - 44, 60, FeatureTile.Obelisk, true);
-
-  // Promote soft banks around bodies of water
-  for (let y = 1; y < height - 1; y += 1) {
-    for (let x = 1; x < width - 1; x += 1) {
-      const idx = index(x, y);
-      if (ground[idx] === GroundTile.Lake || ground[idx] === GroundTile.Sea) {
-        for (let oy = -1; oy <= 1; oy += 1) {
-          for (let ox = -1; ox <= 1; ox += 1) {
-            const nx = x + ox;
-            const ny = y + oy;
-            const nIdx = index(nx, ny);
-            if (ground[nIdx] === GroundTile.Meadow) {
-              setGround(nx, ny, GroundTile.Beach);
-            }
+  const drawLine = (
+    from: { x: number; y: number },
+    to: { x: number; y: number },
+    widthTiles: number,
+    paint: (x: number, y: number) => void
+  ): void => {
+    const half = Math.floor(widthTiles / 2);
+    const dx = to.x - from.x;
+    const dy = to.y - from.y;
+    const steps = Math.max(Math.abs(dx), Math.abs(dy));
+    for (let step = 0; step <= steps; step += 1) {
+      const t = steps === 0 ? 0 : step / steps;
+      const x = Math.round(from.x + dx * t);
+      const y = Math.round(from.y + dy * t);
+      for (let ox = -half; ox <= half; ox += 1) {
+        for (let oy = -half; oy <= half; oy += 1) {
+          if (inBounds(x + ox, y + oy)) {
+            paint(x + ox, y + oy);
           }
         }
       }
     }
+  };
+
+  const roadX = Math.floor(width / 2);
+  const roadHalfWidth = 3;
+  const levelBounds = (level: number): { minY: number; maxY: number } => {
+    const minY = level * levelHeight;
+    const maxY = Math.min(height, minY + levelHeight);
+    return { minY, maxY };
+  };
+
+  const paintRoad = (startY: number, endY: number, tile: GroundTile): void => {
+    for (let y = startY; y < endY; y += 1) {
+      for (let x = roadX - roadHalfWidth; x <= roadX + roadHalfWidth; x += 1) {
+        if (!inBounds(x, y)) {
+          continue;
+        }
+        setGround(x, y, tile);
+        collision[index(x, y)] = 0;
+      }
+    }
+  };
+
+  const placeFenceRect = (
+    x0: number,
+    y0: number,
+    wRect: number,
+    hRect: number
+  ): void => {
+    for (let y = y0; y < y0 + hRect; y += 1) {
+      for (let x = x0; x < x0 + wRect; x += 1) {
+        const isEdge = x === x0 || x === x0 + wRect - 1 || y === y0 || y === y0 + hRect - 1;
+        if (isEdge) {
+          addFeature(x, y, FeatureTile.Fence, true);
+        }
+      }
+    }
+  };
+
+  // Level 1 – Outer Farmlands
+  {
+    const { minY, maxY } = levelBounds(0);
+    paintRectangle(0, minY, width, maxY - minY, (x, y) => setGround(x, y, GroundTile.Meadow));
+    paintRoad(minY, maxY, GroundTile.DirtRoad);
+
+    const farmlandWidth = 64;
+    paintRectangle(roadX - roadHalfWidth - farmlandWidth, minY + 4, farmlandWidth - 6, maxY - minY - 8, (x, y) => {
+      setGround(x, y, GroundTile.Farmland);
+    });
+    paintRectangle(roadX + roadHalfWidth + 6, minY + 4, farmlandWidth - 12, maxY - minY - 8, (x, y) => {
+      setGround(x, y, GroundTile.VegetablePlot);
+    });
+
+    scatterFeatures({
+      minX: roadX - roadHalfWidth - farmlandWidth,
+      maxX: roadX - roadHalfWidth - 6,
+      minY: minY + 6,
+      maxY: maxY - 4
+    }, 0.14, FeatureTile.HayBale, true);
+
+    scatterFeatures({
+      minX: roadX + roadHalfWidth + 8,
+      maxX: roadX + roadHalfWidth + farmlandWidth - 10,
+      minY: minY + 6,
+      maxY: maxY - 6
+    }, 0.16, FeatureTile.TreeBush, false);
+
+    const farmX = roadX + roadHalfWidth + 24;
+    const farmY = minY + 8;
+    paintRectangle(farmX - 6, farmY - 2, 20, 16, (x, y) => setGround(x, y, GroundTile.Meadow));
+    addFeature(farmX, farmY, FeatureTile.House, true);
+    addFeature(farmX + 4, farmY + 4, FeatureTile.House, true);
+    addFeature(farmX + 8, farmY + 1, FeatureTile.Barn, true);
+    placeFenceRect(farmX - 4, farmY + 6, 16, 10);
+    scatterFeatures({ minX: farmX - 3, maxX: farmX + 11, minY: farmY + 7, maxY: farmY + 14 }, 0.18, FeatureTile.Animal, false);
+    addFeature(farmX - 2, farmY + 12, FeatureTile.Gate, false);
+    addFeature(farmX + 10, farmY + 12, FeatureTile.Cart, true);
+    addFeature(farmX + 6, farmY + 14, FeatureTile.Crate, true);
+
+    const windmillX = roadX - roadHalfWidth - 32;
+    const windmillY = minY + Math.floor((maxY - minY) / 2);
+    paintRectangle(windmillX - 6, windmillY - 6, 16, 16, (x, y) => setGround(x, y, GroundTile.MeadowDarker));
+    addFeature(windmillX, windmillY, FeatureTile.Windmill, true);
+    drawLine({ x: windmillX + 8, y: windmillY + 8 }, { x: roadX - roadHalfWidth - 1, y: windmillY + 4 }, 2, (x, y) => {
+      setGround(x, y, GroundTile.DirtRoad);
+      collision[index(x, y)] = 0;
+    });
+
+    addFeature(roadX - 1, minY + 6, FeatureTile.Shrine, true);
+    addFeature(roadX + 2, minY + 10, FeatureTile.Barrel, true);
+    addFeature(roadX - 3, minY + 18, FeatureTile.Cart, true);
   }
 
-  // Keep town plazas and the glade traversable
+  // Level 2 – Village Outskirts
+  {
+    const { minY, maxY } = levelBounds(1);
+    paintRectangle(0, minY, width, maxY - minY, (x, y) => setGround(x, y, GroundTile.Meadow));
+    paintRoad(minY, maxY, GroundTile.CobblestoneRoad);
+
+    paintRectangle(roadX - roadHalfWidth - 70, minY + 4, 62, maxY - minY - 8, (x, y) => {
+      setGround(x, y, GroundTile.Orchard);
+    });
+    scatterFeatures({
+      minX: roadX - roadHalfWidth - 70,
+      maxX: roadX - roadHalfWidth - 8,
+      minY: minY + 6,
+      maxY: maxY - 6
+    }, 0.22, FeatureTile.TreeFruit, true);
+    scatterFeatures({
+      minX: roadX - roadHalfWidth - 70,
+      maxX: roadX - roadHalfWidth - 8,
+      minY: minY + 6,
+      maxY: maxY - 6
+    }, 0.08, FeatureTile.TreeBush, false);
+
+    paintRectangle(roadX + roadHalfWidth + 8, minY + 4, 70, maxY - minY - 8, (x, y) => {
+      setGround(x, y, GroundTile.Pasture);
+    });
+    scatterFeatures({
+      minX: roadX + roadHalfWidth + 10,
+      maxX: roadX + roadHalfWidth + 72,
+      minY: minY + 6,
+      maxY: maxY - 6
+    }, 0.16, FeatureTile.Animal, false);
+
+    for (let x = 12; x < width - 12; x += 1) {
+      if (Math.abs(x - roadX) <= roadHalfWidth) {
+        continue;
+      }
+      addFeature(x, maxY - 6, FeatureTile.Palisade, true);
+    }
+    addFeature(roadX, maxY - 6, FeatureTile.Gate, false);
+    addFeature(roadX - 4, maxY - 10, FeatureTile.Watchfire, false);
+    addFeature(roadX + 4, maxY - 10, FeatureTile.Watchfire, false);
+    addFeature(roadX - 8, minY + 10, FeatureTile.GuardTower, true);
+    addFeature(roadX + 8, minY + 12, FeatureTile.GuardTower, true);
+    addFeature(roadX - 12, minY + 14, FeatureTile.House, true);
+    addFeature(roadX + 14, minY + 18, FeatureTile.House, true);
+    addFeature(roadX + roadHalfWidth + 20, minY + 8, FeatureTile.Gatehouse, true);
+
+    addFeature(roadX + roadHalfWidth + 26, minY + 12, FeatureTile.Animal, false);
+    addFeature(roadX - roadHalfWidth - 30, minY + 10, FeatureTile.TreeOak, true);
+  }
+
+  // Level 3 – Inner Village & Market Square
+  {
+    const { minY, maxY } = levelBounds(2);
+    paintRectangle(0, minY, width, maxY - minY, (x, y) => setGround(x, y, GroundTile.Meadow));
+    paintRoad(minY, maxY, GroundTile.CobblestoneRoad);
+
+    const squareSize = 15;
+    const squareMinX = roadX - Math.floor(squareSize / 2) - 20;
+    const squareMinY = minY + Math.floor((maxY - minY) / 2) - Math.floor(squareSize / 2);
+    paintRectangle(squareMinX, squareMinY, squareSize + 40, squareSize + 6, (x, y) => {
+      setGround(x, y, GroundTile.Plaza);
+    });
+
+    for (let sx = squareMinX + 4; sx < squareMinX + squareSize + 34; sx += 4) {
+      addFeature(sx, squareMinY + 2, FeatureTile.MarketStall, true);
+      addFeature(sx, squareMinY + squareSize + 2, FeatureTile.MarketStall, true);
+    }
+    addFeature(roadX, squareMinY + Math.floor(squareSize / 2), FeatureTile.Well, true);
+    addFeature(roadX - 6, squareMinY + 4, FeatureTile.Barrel, true);
+    addFeature(roadX + 6, squareMinY + squareSize, FeatureTile.Crate, true);
+
+    const innX = squareMinX - 10;
+    const innY = squareMinY - 4;
+    paintRectangle(innX - 2, innY - 2, 12, 12, (x, y) => setGround(x, y, GroundTile.Plaza));
+    addFeature(innX, innY, FeatureTile.Inn, true);
+    addFeature(innX + 2, innY + 4, FeatureTile.Lantern, false);
+    addFeature(innX + 4, innY - 2, FeatureTile.Banner, false);
+
+    const blacksmithX = squareMinX + squareSize + 26;
+    const blacksmithY = squareMinY + 2;
+    addFeature(blacksmithX, blacksmithY, FeatureTile.Blacksmith, true);
+    addFeature(blacksmithX + 2, blacksmithY, FeatureTile.Crate, true);
+    addFeature(blacksmithX + 1, blacksmithY + 4, FeatureTile.Barrel, true);
+
+    for (let offset = -18; offset <= 18; offset += 6) {
+      addFeature(roadX + offset, minY + 6, FeatureTile.House, true);
+      addFeature(roadX + offset, maxY - 8, FeatureTile.House, true);
+    }
+
+    drawLine({ x: roadX - 30, y: squareMinY + squareSize + 8 }, { x: roadX - 60, y: maxY - 4 }, 2, (x, y) => {
+      setGround(x, y, GroundTile.DirtRoad);
+      collision[index(x, y)] = 0;
+      addFeature(x, y, FeatureTile.Barrel, false);
+    });
+
+    drawLine({ x: roadX + 30, y: squareMinY + 2 }, { x: roadX + 70, y: minY + 10 }, 2, (x, y) => {
+      setGround(x, y, GroundTile.DirtRoad);
+      collision[index(x, y)] = 0;
+    });
+    addFeature(roadX + 72, minY + 12, FeatureTile.Boat, true);
+    addFeature(roadX + 72, minY + 14, FeatureTile.Net, false);
+  }
+
+  // Level 4 – Forest Road
+  {
+    const { minY, maxY } = levelBounds(3);
+    paintRectangle(0, minY, width, maxY - minY, (x, y) => setGround(x, y, GroundTile.Forest));
+    paintRoad(minY, maxY, GroundTile.DirtRoad);
+    scatterFeatures({ minX: 8, maxX: width - 8, minY, maxY }, 0.28, FeatureTile.TreeOak, true);
+    scatterFeatures({ minX: 12, maxX: width - 12, minY, maxY }, 0.18, FeatureTile.TreePine, true);
+
+    const campX = roadX + 40;
+    const campY = minY + 12;
+    paintRectangle(campX - 6, campY - 4, 18, 16, (x, y) => setGround(x, y, GroundTile.MeadowDarker));
+    addFeature(campX, campY, FeatureTile.Tent, true);
+    addFeature(campX + 4, campY + 2, FeatureTile.Tent, true);
+    addFeature(campX + 2, campY + 6, FeatureTile.Campfire, false);
+    addFeature(campX + 8, campY + 6, FeatureTile.Crate, true);
+
+    const shrineX = roadX - 42;
+    const shrineY = minY + 20;
+    addFeature(shrineX, shrineY, FeatureTile.ShrineStone, true);
+    addFeature(shrineX + 2, shrineY, FeatureTile.Lantern, false);
+
+    scatterFeatures({ minX: roadX - 60, maxX: roadX - 10, minY: minY + 8, maxY: maxY - 8 }, 0.16, FeatureTile.TreeBush, false);
+  }
+
+  // Level 5 – Lake & River Crossing
+  {
+    const { minY, maxY } = levelBounds(4);
+    paintRectangle(0, minY, width, maxY - minY, (x, y) => setGround(x, y, GroundTile.Meadow));
+    const lakeStartX = Math.floor(width * 0.55);
+    paintRectangle(lakeStartX, minY, Math.floor(width * 0.45), maxY - minY, (x, y) => {
+      setGround(x, y, GroundTile.DeepWater);
+      blockTile(x, y);
+    });
+    for (let y = minY; y < maxY; y += 1) {
+      for (let x = lakeStartX; x < width; x += 1) {
+        const shoreDistance = x - lakeStartX;
+        const verticalEdge = Math.min(y - minY, maxY - y - 1);
+        if (shoreDistance <= 2 || verticalEdge <= 2 || tileNoise(x, y) > 0.88) {
+          setGround(x, y, GroundTile.ShallowWater);
+          blockTile(x, y);
+        }
+      }
+    }
+
+    const riverY = minY + Math.floor((maxY - minY) / 2);
+    paintRectangle(roadX - 40, riverY - 3, 120, 6, (x, y) => {
+      setGround(x, y, GroundTile.ShallowWater);
+      blockTile(x, y);
+    });
+
+    paintRoad(minY, maxY, GroundTile.CobblestoneRoad);
+    paintRectangle(roadX - roadHalfWidth, riverY - 3, roadHalfWidth * 2 + 1, 6, (x, y) => {
+      setGround(x, y, GroundTile.StoneBridge);
+      collision[index(x, y)] = 0;
+    });
+    addFeature(roadX - 2, riverY - 2, FeatureTile.BridgeBanner, false);
+    addFeature(roadX + 2, riverY + 2, FeatureTile.BridgeBanner, false);
+
+    const boardwalkY = minY + 6;
+    paintRectangle(Math.floor(width * 0.62), boardwalkY, Math.floor(width * 0.3), 6, (x, y) => {
+      setGround(x, y, GroundTile.Boardwalk);
+      collision[index(x, y)] = 0;
+    });
+    addFeature(Math.floor(width * 0.62) + 4, boardwalkY + 1, FeatureTile.FishingHut, true);
+    addFeature(Math.floor(width * 0.62) + 10, boardwalkY + 1, FeatureTile.FishingHut, true);
+    addFeature(Math.floor(width * 0.62) + 16, boardwalkY + 1, FeatureTile.Net, false);
+    addFeature(Math.floor(width * 0.62) + 22, boardwalkY + 1, FeatureTile.Boat, true);
+
+    scatterFeatures({ minX: lakeStartX, maxX: width - 6, minY: minY + 8, maxY: maxY - 6 }, 0.18, FeatureTile.Reeds, true);
+    scatterFeatures({ minX: lakeStartX - 6, maxX: lakeStartX + 12, minY: minY + 6, maxY: maxY - 6 }, 0.14, FeatureTile.TreeWillow, true);
+    scatterFeatures({ minX: lakeStartX + 6, maxX: width - 8, minY: minY + 8, maxY: maxY - 8 }, 0.08, FeatureTile.Duck, false);
+  }
+
+  // Level 6 – Bridge Fortress & Narrow Pass
+  {
+    const { minY, maxY } = levelBounds(5);
+    paintRectangle(0, minY, width, maxY - minY, (x, y) => setGround(x, y, GroundTile.Cliff));
+    const gorgeTop = minY + 10;
+    const gorgeBottom = maxY - 10;
+    paintRoad(minY, gorgeTop - 4, GroundTile.StoneBridge);
+    paintRectangle(0, gorgeTop, width, gorgeBottom - gorgeTop, (x, y) => {
+      setGround(x, y, GroundTile.DeepWater);
+      blockTile(x, y);
+    });
+    for (let y = gorgeTop; y < gorgeBottom; y += 1) {
+      const edgeDepth = Math.min(y - gorgeTop, gorgeBottom - y - 1);
+      if (edgeDepth <= 1) {
+        for (let x = 0; x < width; x += 1) {
+          setGround(x, y, GroundTile.ShallowWater);
+          blockTile(x, y);
+        }
+      }
+    }
+    paintRectangle(0, minY + 6, width, 4, (x, y) => setGround(x, y, GroundTile.Cliff));
+    paintRectangle(0, maxY - 10, width, 4, (x, y) => setGround(x, y, GroundTile.Cliff));
+
+    const bridgeWidth = roadHalfWidth * 2 + 4;
+    const bridgeStartX = roadX - Math.floor(bridgeWidth / 2);
+    paintRectangle(bridgeStartX, gorgeTop - 4, bridgeWidth, gorgeBottom - gorgeTop + 8, (x, y) => {
+      setGround(x, y, GroundTile.StoneBridge);
+      collision[index(x, y)] = 0;
+    });
+    paintRoad(gorgeBottom + 4, maxY, GroundTile.StoneBridge);
+    addFeature(roadX - 6, minY + 6, FeatureTile.Gatehouse, true);
+    addFeature(roadX + 6, minY + 6, FeatureTile.Gatehouse, true);
+    addFeature(roadX, minY + 4, FeatureTile.Gate, false);
+    addFeature(roadX - 10, minY + 4, FeatureTile.GuardTower, true);
+    addFeature(roadX + 10, minY + 4, FeatureTile.GuardTower, true);
+    addFeature(roadX - 4, maxY - 6, FeatureTile.CastleTower, true);
+    addFeature(roadX + 4, maxY - 6, FeatureTile.CastleTower, true);
+    addFeature(roadX, maxY - 8, FeatureTile.BridgeBanner, false);
+
+    addFeature(roadX - 12, minY + 12, FeatureTile.Watchfire, false);
+    addFeature(roadX + 12, minY + 12, FeatureTile.Watchfire, false);
+    addFeature(roadX - 2, minY + 12, FeatureTile.Lantern, false);
+    addFeature(roadX + 2, minY + 12, FeatureTile.Lantern, false);
+  }
+
+  // Level 7 – Highlands & Monastery Road
+  {
+    const { minY, maxY } = levelBounds(6);
+    paintRectangle(0, minY, width, maxY - minY, (x, y) => setGround(x, y, GroundTile.HighlandGrass));
+    paintRoad(minY, maxY, GroundTile.CobblestoneRoad);
+    scatterFeatures({ minX: 8, maxX: width - 8, minY, maxY }, 0.12, FeatureTile.TreePine, true);
+
+    for (let tier = 0; tier < 3; tier += 1) {
+      const plateauY = minY + 8 + tier * 10;
+      drawLine({ x: roadX - 60 + tier * 10, y: plateauY }, { x: roadX + 60 - tier * 8, y: plateauY }, 1, (x, y) => {
+        setGround(x, y, GroundTile.Cliff);
+        blockTile(x, y);
+      });
+    }
+
+    const monasteryX = roadX + 50;
+    const monasteryY = minY + 6;
+    paintRectangle(monasteryX - 6, monasteryY, 32, 26, (x, y) => setGround(x, y, GroundTile.CastleStone));
+    addFeature(monasteryX, monasteryY + 4, FeatureTile.Monastery, true);
+    addFeature(monasteryX + 12, monasteryY + 2, FeatureTile.BellTower, true);
+    addFeature(monasteryX + 8, monasteryY + 12, FeatureTile.TreeBush, false);
+    addFeature(monasteryX + 4, monasteryY + 16, FeatureTile.Lantern, false);
+    addFeature(monasteryX + 10, monasteryY + 16, FeatureTile.Lantern, false);
+
+    scatterFeatures({ minX: roadX - 80, maxX: roadX - 20, minY: minY + 6, maxY: maxY - 4 }, 0.1, FeatureTile.Cairn, true);
+    scatterFeatures({ minX: roadX - 60, maxX: roadX - 10, minY: minY + 16, maxY: maxY - 6 }, 0.08, FeatureTile.Grave, true);
+
+    addFeature(roadX + 30, maxY - 10, FeatureTile.Lantern, false);
+    addFeature(roadX + 26, maxY - 12, FeatureTile.Cairn, true);
+  }
+
+  // Level 8 – Dark Forest & Swamp Edge
+  {
+    const { minY, maxY } = levelBounds(7);
+    paintRectangle(0, minY, width, maxY - minY, (x, y) => setGround(x, y, GroundTile.Marsh));
+    paintRoad(minY, maxY, GroundTile.DirtRoad);
+    scatterFeatures({ minX: 4, maxX: width - 4, minY, maxY }, 0.26, FeatureTile.TreePine, true);
+    scatterFeatures({ minX: 4, maxX: width - 4, minY, maxY }, 0.22, FeatureTile.DeadTree, true);
+
+    for (let segment = 0; segment < 4; segment += 1) {
+      const segY = minY + 6 + segment * 6;
+      paintRectangle(roadX - 2, segY, 4, 2, (x, y) => {
+        setGround(x, y, GroundTile.Boardwalk);
+        collision[index(x, y)] = 0;
+      });
+    }
+
+    for (let pool = 0; pool < 5; pool += 1) {
+      const cx = roadX + (pool % 2 === 0 ? 36 : -42) + pool * 4;
+      const cy = minY + 8 + pool * 5;
+      paintCircle(cx, cy, 5, (x, y, distance) => {
+        setGround(x, y, distance < 2 ? GroundTile.DeepWater : GroundTile.ShallowWater);
+        blockTile(x, y);
+      });
+    }
+
+    scatterFeatures({ minX: roadX - 50, maxX: roadX + 50, minY: minY + 4, maxY: maxY - 4 }, 0.12, FeatureTile.Firefly, false);
+    addFeature(roadX + 60, minY + 6, FeatureTile.House, true);
+    addFeature(roadX + 60, minY + 8, FeatureTile.Shrine, true);
+  }
+
+  // Level 9 – Ruined Outskirts & Crumbling Walls
+  {
+    const { minY, maxY } = levelBounds(8);
+    paintRectangle(0, minY, width, maxY - minY, (x, y) => setGround(x, y, GroundTile.Ruins));
+    paintRoad(minY, maxY, GroundTile.CobblestoneRoad);
+
+    drawLine({ x: roadX - 70, y: minY + 6 }, { x: roadX + 70, y: minY + 6 }, 2, (x, y) => {
+      addFeature(x, y, FeatureTile.RuinedWall, true);
+    });
+    drawLine({ x: roadX - 60, y: minY + 10 }, { x: roadX - 60, y: maxY - 4 }, 2, (x, y) => {
+      addFeature(x, y, FeatureTile.RuinedWall, true);
+    });
+    drawLine({ x: roadX + 64, y: minY + 10 }, { x: roadX + 64, y: maxY - 4 }, 2, (x, y) => {
+      addFeature(x, y, FeatureTile.RuinedWall, true);
+    });
+
+    addFeature(roadX - 20, minY + 12, FeatureTile.CollapsedTower, true);
+    addFeature(roadX + 24, minY + 14, FeatureTile.CollapsedTower, true);
+    addFeature(roadX, minY + 20, FeatureTile.BrokenStatue, true);
+
+    const fountainY = minY + Math.floor((maxY - minY) / 2);
+    addFeature(roadX, fountainY, FeatureTile.Fountain, true);
+
+    scatterFeatures({ minX: roadX - 70, maxX: roadX + 70, minY: minY + 12, maxY: maxY - 6 }, 0.14, FeatureTile.TreeOak, true);
+    scatterFeatures({ minX: roadX - 50, maxX: roadX + 50, minY: minY + 12, maxY: maxY - 6 }, 0.1, FeatureTile.TreeBush, false);
+    addFeature(roadX + 70, maxY - 6, FeatureTile.Cart, true);
+  }
+
+  // Level 10 – Inner Citadel & Capital
+  {
+    const { minY, maxY } = levelBounds(9);
+    paintRectangle(0, minY, width, maxY - minY, (x, y) => setGround(x, y, GroundTile.CastleStone));
+    paintRoad(minY, maxY, GroundTile.CobblestoneRoad);
+
+    const outerRingY = minY + 6;
+    paintRectangle(roadX - 70, outerRingY, 140, 12, (x, y) => setGround(x, y, GroundTile.CastleStone));
+    for (let offset = -60; offset <= 60; offset += 12) {
+      addFeature(roadX + offset, outerRingY + 2, FeatureTile.House, true);
+      addFeature(roadX + offset, outerRingY + 8, FeatureTile.House, true);
+    }
+
+    const nobleRingY = outerRingY + 16;
+    paintRectangle(roadX - 52, nobleRingY, 104, 12, (x, y) => setGround(x, y, GroundTile.Plaza));
+    for (let offset = -40; offset <= 40; offset += 16) {
+      addFeature(roadX + offset, nobleRingY + 2, FeatureTile.NobleHouse, true);
+      addFeature(roadX + offset + 4, nobleRingY + 6, FeatureTile.TreeBush, false);
+    }
+
+    const citadelX = roadX - 20;
+    const citadelY = nobleRingY + 14;
+    paintRectangle(citadelX, citadelY, 40, 18, (x, y) => setGround(x, y, GroundTile.CastleStone));
+    addFeature(citadelX + 4, citadelY + 4, FeatureTile.CastleTower, true);
+    addFeature(citadelX + 28, citadelY + 4, FeatureTile.CastleTower, true);
+    addFeature(citadelX + 14, citadelY + 2, FeatureTile.CastleTower, true);
+    addFeature(citadelX + 14, citadelY + 12, FeatureTile.TrainingDummy, true);
+    addFeature(citadelX + 10, citadelY + 8, FeatureTile.Fountain, true);
+    addFeature(citadelX + 18, citadelY + 8, FeatureTile.Lantern, false);
+    addFeature(citadelX + 22, citadelY + 8, FeatureTile.Lantern, false);
+
+    addFeature(roadX, minY + 4, FeatureTile.Gate, false);
+    addFeature(roadX - 6, minY + 4, FeatureTile.GuardTower, true);
+    addFeature(roadX + 6, minY + 4, FeatureTile.GuardTower, true);
+    addFeature(roadX - 4, minY + 10, FeatureTile.Banner, false);
+    addFeature(roadX + 4, minY + 10, FeatureTile.Banner, false);
+  }
+
+  const blockingGroundTiles = new Set<GroundTile>([
+    GroundTile.DeepWater,
+    GroundTile.ShallowWater,
+    GroundTile.Cliff,
+    GroundTile.Marsh
+  ]);
+
   for (let i = 0; i < ground.length; i += 1) {
-    if (ground[i] === GroundTile.Town || ground[i] === GroundTile.Glade) {
-      collision[i] = 0;
+    if (blockingGroundTiles.has(ground[i] as GroundTile)) {
+      collision[i] = 1;
     }
   }
+
   const data: TilemapData = {
     tileSize: TILE_SIZE,
     width,
