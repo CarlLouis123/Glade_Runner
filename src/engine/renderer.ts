@@ -17,6 +17,19 @@ type ProceduralDrawer = (
   info: ProceduralInfo
 ) => void;
 
+type CachedCanvas = HTMLCanvasElement | OffscreenCanvas;
+type CachedContext = CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D;
+
+interface ProceduralCacheEntry {
+  canvas: CachedCanvas;
+  ctx: CachedContext | null;
+  width: number;
+  height: number;
+  lastUpdate: number;
+  lastUsed: number;
+  lastSeed: number;
+}
+
 const getTimeSeconds = (): number =>
   (typeof performance !== 'undefined' ? performance.now() : Date.now()) / 1000;
 
@@ -549,6 +562,14 @@ export class Renderer {
     zoom: 1
   };
   private showGrid = false;
+  private readonly proceduralCache = new Map<string, ProceduralCacheEntry>();
+  private readonly proceduralUpdateIntervals: Record<ProceduralInfo['kind'], number> = {
+    ground: 200,
+    feature: 120,
+    entity: 90,
+    ui: 150
+  };
+  private readonly proceduralCacheLimit = 6000;
 
   constructor(ctx: CanvasRenderingContext2D) {
     this.ctx = ctx;
@@ -652,14 +673,18 @@ export class Renderer {
       this.ctx.restore();
     }
 
-    const drawer = PROCEDURAL_DRAWERS[textureKey];
-    if (!texture?.image && drawer) {
-      drawer(this.ctx, w, h, info);
-    } else if (texture?.image) {
+    const drawer: ProceduralDrawer | undefined = PROCEDURAL_DRAWERS[textureKey];
+    const hasProceduralDrawer = typeof drawer === 'function';
+    if (texture?.image) {
       const { image, frame } = texture;
       this.ctx.drawImage(image, frame.x, frame.y, frame.w, frame.h, -w / 2, -h / 2, w, h);
-    } else if (drawer) {
-      drawer(this.ctx, w, h, info);
+    } else if (hasProceduralDrawer && drawer) {
+      const cachedImage = this.renderProceduralSprite(drawer, info, x, y, w, h);
+      if (cachedImage) {
+        this.ctx.drawImage(cachedImage, -w / 2, -h / 2, w, h);
+      } else {
+        drawer(this.ctx, w, h, info);
+      }
     } else {
       this.ctx.fillStyle = this.resolveColor(textureKey);
       this.ctx.fillRect(-w / 2, -h / 2, w, h);
@@ -675,7 +700,7 @@ export class Renderer {
       this.ctx.fillStyle = overlay;
       this.ctx.fillRect(-w / 2, -h / 2, w, h);
       this.ctx.restore();
-    } else if (isGround && drawer) {
+    } else if (isGround && hasProceduralDrawer) {
       const light = 0.08 + Math.sin(time * 0.6 + seedValue * 12) * 0.04;
       this.ctx.save();
       this.ctx.globalAlpha = light;
@@ -685,6 +710,108 @@ export class Renderer {
     }
 
     this.ctx.restore();
+  }
+
+  private renderProceduralSprite(
+    drawer: ProceduralDrawer,
+    info: ProceduralInfo,
+    x: number,
+    y: number,
+    w: number,
+    h: number
+  ): CanvasImageSource | null {
+    const nowMs = info.time * 1000;
+    const cacheKey = this.getProceduralCacheKey(info, x, y, w, h);
+    const entry = this.getProceduralCacheEntry(cacheKey, w, h, nowMs);
+    if (!entry.ctx) {
+      return null;
+    }
+
+    const interval = this.proceduralUpdateIntervals[info.kind] ?? 120;
+    if (nowMs - entry.lastUpdate > interval || entry.lastSeed !== info.seed) {
+      const cacheCtx = entry.ctx as CanvasRenderingContext2D;
+      cacheCtx.save();
+      cacheCtx.setTransform(1, 0, 0, 1, 0, 0);
+      cacheCtx.globalAlpha = 1;
+      cacheCtx.globalCompositeOperation = 'source-over';
+      cacheCtx.clearRect(0, 0, w, h);
+      cacheCtx.translate(w / 2, h / 2);
+      drawer(cacheCtx, w, h, info);
+      cacheCtx.restore();
+      entry.lastUpdate = nowMs;
+      entry.lastSeed = info.seed;
+    }
+
+    return entry.canvas;
+  }
+
+  private getProceduralCacheKey(
+    info: ProceduralInfo,
+    x: number,
+    y: number,
+    w: number,
+    h: number
+  ): string {
+    if (info.kind === 'entity' || info.kind === 'ui') {
+      return info.key;
+    }
+    const tileX = Math.floor(x / w);
+    const tileY = Math.floor(y / h);
+    return `${info.key}:${tileX}:${tileY}`;
+  }
+
+  private getProceduralCacheEntry(
+    key: string,
+    w: number,
+    h: number,
+    nowMs: number
+  ): ProceduralCacheEntry {
+    let entry = this.proceduralCache.get(key);
+    if (!entry) {
+      const canvas: CachedCanvas =
+        typeof OffscreenCanvas !== 'undefined'
+          ? new OffscreenCanvas(w, h)
+          : document.createElement('canvas');
+      canvas.width = w;
+      canvas.height = h;
+      const ctx = canvas.getContext('2d') as CachedContext | null;
+      const created: ProceduralCacheEntry = {
+        canvas,
+        ctx,
+        width: w,
+        height: h,
+        lastUpdate: 0,
+        lastUsed: nowMs,
+        lastSeed: Number.NaN
+      };
+      this.proceduralCache.set(key, created);
+      this.trimProceduralCache();
+      return created;
+    }
+
+    if (entry.width !== w || entry.height !== h) {
+      entry.width = w;
+      entry.height = h;
+      entry.canvas.width = w;
+      entry.canvas.height = h;
+      entry.lastUpdate = 0;
+    }
+
+    entry.lastUsed = nowMs;
+    return entry;
+  }
+
+  private trimProceduralCache(): void {
+    if (this.proceduralCache.size <= this.proceduralCacheLimit) {
+      return;
+    }
+
+    const entries = [...this.proceduralCache.entries()];
+    entries.sort((a, b) => a[1].lastUsed - b[1].lastUsed);
+    const removeCount = entries.length - this.proceduralCacheLimit;
+    for (let i = 0; i < removeCount; i += 1) {
+      this.proceduralCache.delete(entries[i][0]);
+    }
   }
 
   drawText(text: string, x: number, y: number, color = '#e6e6e6', size = 16): void {
