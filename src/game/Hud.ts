@@ -21,7 +21,7 @@ export class Hud {
     this.root = element;
     this.root.innerHTML = `
       <div class="hud-card">
-        <h1 class="hud-title">Glade Runner // Threefold Awakening</h1>
+        <h1 class="hud-title">Glade Runner // Isometric Reverie</h1>
         <p class="hud-region">Region: <span data-region>Inner Grove</span></p>
         <p class="hud-heading">Heading: <span data-heading>0°</span></p>
         <p class="hud-pace">Pace: <span data-pace>0 m/s</span></p>
@@ -32,9 +32,9 @@ export class Hud {
         <div class="hud-instructions">
           <strong>Controls</strong>
           <ul>
-            <li>WASD to move, Shift to sprint</li>
-            <li>Hold left mouse button or use Q/E or ←/→ to turn</li>
-            <li>Explore the glade and follow the lights to new regions</li>
+            <li>WASD or arrow keys to travel the isometric trails</li>
+            <li>Hold Shift to sprint between lanterns</li>
+            <li>Explore the glade from above and follow the lights to new regions</li>
           </ul>
         </div>
       </div>
