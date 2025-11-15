@@ -1,17 +1,16 @@
-import '@ui/global.css';
+import './ui/global.css';
 
-import { GameApp } from '@engine/app';
-import { MainMenu } from '@game/scenes/MainMenu';
-import { getLastAction } from '@game/telemetry';
+import { GameApp } from './game/GameApp';
 
 const canvas = document.getElementById('game');
 if (!(canvas instanceof HTMLCanvasElement)) {
-  throw new Error('Game canvas missing');
+  throw new Error('Expected a canvas element with id="game"');
 }
 
 const app = new GameApp(canvas);
 
-window.addEventListener('resize', () => app.resize());
+const onResize = () => app.resize();
+window.addEventListener('resize', onResize);
 
 document.addEventListener('visibilitychange', () => {
   if (document.hidden) {
@@ -21,29 +20,4 @@ document.addEventListener('visibilitychange', () => {
   }
 });
 
-window.onerror = (message, source, lineno, colno, error) => {
-  console.error('Global error', {
-    message,
-    source,
-    lineno,
-    colno,
-    error,
-    scene: app.getCurrentSceneName(),
-    lastAction: getLastAction()
-  });
-};
-
-window.onunhandledrejection = (event) => {
-  console.error('Unhandled rejection', {
-    reason: event.reason,
-    scene: app.getCurrentSceneName(),
-    lastAction: getLastAction()
-  });
-};
-
-const boot = async () => {
-  await app.setScene(new MainMenu(app));
-  await app.start();
-};
-
-void boot();
+app.start();
