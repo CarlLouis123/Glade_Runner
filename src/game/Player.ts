@@ -5,7 +5,6 @@ import type { World } from './World';
 
 const WALK_SPEED = 6;
 const SPRINT_SPEED = 10;
-const TURN_SPEED = Math.PI;
 
 export class Player {
   readonly object: THREE.Object3D;
@@ -51,31 +50,22 @@ export class Player {
 
   update(delta: number, input: InputController, world: World): void {
     const movement = input.movement;
-    const yawDelta = input.consumeYaw();
 
-    if (movement.turnLeft) {
-      this.heading += TURN_SPEED * delta;
-    }
-    if (movement.turnRight) {
-      this.heading -= TURN_SPEED * delta;
-    }
-    this.heading -= yawDelta;
-
-    const forward = new THREE.Vector3(Math.sin(this.heading), 0, Math.cos(this.heading));
-    const right = new THREE.Vector3().crossVectors(forward, new THREE.Vector3(0, 1, 0)).normalize();
+    const isoForward = new THREE.Vector3(-1, 0, -1).normalize();
+    const isoRight = new THREE.Vector3(1, 0, -1).normalize();
 
     const intent = new THREE.Vector3();
     if (movement.forward) {
-      intent.add(forward);
+      intent.add(isoForward);
     }
     if (movement.backward) {
-      intent.sub(forward);
+      intent.sub(isoForward);
     }
     if (movement.left) {
-      intent.sub(right);
+      intent.sub(isoRight);
     }
     if (movement.right) {
-      intent.add(right);
+      intent.add(isoRight);
     }
 
     if (intent.lengthSq() > 1e-5) {
@@ -84,6 +74,10 @@ export class Player {
 
     const targetSpeed = movement.sprint ? SPRINT_SPEED : WALK_SPEED;
     this.velocity.lerp(intent.multiplyScalar(targetSpeed), 1 - Math.exp(-delta * 12));
+
+    if (this.velocity.lengthSq() > 1e-4) {
+      this.heading = Math.atan2(this.velocity.x, this.velocity.z);
+    }
 
     this.object.position.addScaledVector(this.velocity, delta);
     world.constrainPosition(this.object.position);

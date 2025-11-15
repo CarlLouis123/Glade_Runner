@@ -16,6 +16,7 @@ export class World {
   private readonly glowMaterial: THREE.ShaderMaterial;
   private readonly roots: THREE.Group;
   private readonly lanterns: THREE.PointLight[] = [];
+  private readonly cameraOffset = new THREE.Vector3(-16, 18, 16);
 
   private readonly clock = new THREE.Clock();
   private cameraReady = false;
@@ -114,6 +115,8 @@ export class World {
 
   private buildLandmarks(): void {
     const rng = THREE.MathUtils.seededRandom;
+    const dummy = new THREE.Object3D();
+
     const treeGeometry = new THREE.ConeGeometry(0.9, 3.4, 9);
     const treeMaterial = new THREE.MeshStandardMaterial({
       color: 0x2f855a,
@@ -122,40 +125,53 @@ export class World {
       emissive: 0x081f17
     });
 
-    for (let i = 0; i < 160; i += 1) {
+    const treeCount = 160;
+    const trees = new THREE.InstancedMesh(treeGeometry, treeMaterial, treeCount);
+    trees.castShadow = true;
+    trees.receiveShadow = true;
+
+    for (let i = 0; i < treeCount; i += 1) {
       const angle = rng() * Math.PI * 2;
       const radius = 6 + rng() * (EXPANSION_RADIUS - 6);
       const x = Math.cos(angle) * radius;
       const z = Math.sin(angle) * radius;
       const y = this.sampleHeight(x, z);
 
-      const tree = new THREE.Mesh(treeGeometry, treeMaterial);
-      tree.position.set(x, y + 1.7, z);
-      tree.castShadow = true;
-      tree.receiveShadow = true;
-      tree.rotation.y = rng() * Math.PI;
-      this.scene.add(tree);
+      dummy.position.set(x, y + 1.7, z);
+      dummy.rotation.y = rng() * Math.PI;
+      const scale = 0.85 + rng() * 0.35;
+      dummy.scale.setScalar(scale);
+      dummy.updateMatrix();
+      trees.setMatrixAt(i, dummy.matrix);
     }
+    trees.instanceMatrix.needsUpdate = true;
+    this.scene.add(trees);
 
-    const stones = new THREE.Group();
     const stoneMaterial = new THREE.MeshStandardMaterial({
       color: 0xb8c2d1,
       roughness: 0.9,
       metalness: 0.02
     });
-    for (let i = 0; i < 24; i += 1) {
-      const geometry = new THREE.DodecahedronGeometry(0.4 + rng() * 0.8, 0);
-      const stone = new THREE.Mesh(geometry, stoneMaterial);
-      const theta = (i / 24) * Math.PI * 2;
+    const stoneGeometry = new THREE.DodecahedronGeometry(0.6, 0);
+    const stoneCount = 24;
+    const stones = new THREE.InstancedMesh(stoneGeometry, stoneMaterial, stoneCount);
+    stones.castShadow = true;
+    stones.receiveShadow = true;
+
+    for (let i = 0; i < stoneCount; i += 1) {
+      const theta = (i / stoneCount) * Math.PI * 2;
       const radius = 5.2 + Math.sin(i * 0.7) * 0.5;
       const x = Math.cos(theta) * radius;
       const z = Math.sin(theta) * radius;
       const y = this.sampleHeight(x, z);
-      stone.position.set(x, y + 0.2, z);
-      stone.castShadow = true;
-      stone.receiveShadow = true;
-      stones.add(stone);
+      dummy.position.set(x, y + 0.2, z);
+      dummy.rotation.y = rng() * Math.PI;
+      const scale = 0.8 + rng() * 0.25;
+      dummy.scale.setScalar(scale);
+      dummy.updateMatrix();
+      stones.setMatrixAt(i, dummy.matrix);
     }
+    stones.instanceMatrix.needsUpdate = true;
     this.scene.add(stones);
 
     const glade = new THREE.Group();
@@ -244,20 +260,18 @@ export class World {
     this.roots.position.z = pos.z * 0.08;
   }
 
-  syncCamera(camera: THREE.PerspectiveCamera, player: Player): void {
-    const target = player.object.position.clone();
-    const yaw = player.headingRadians;
-    const behind = new THREE.Vector3(Math.sin(yaw), 0, Math.cos(yaw)).multiplyScalar(-8);
-    behind.y = 5;
-    const desired = target.clone().add(behind);
+  syncCamera(camera: THREE.OrthographicCamera, player: Player): void {
+    const target = player.object.position;
+    const desired = target.clone().add(this.cameraOffset);
 
     if (!this.cameraReady) {
       camera.position.copy(desired);
+      camera.up.set(0, 1, 0);
       this.cameraReady = true;
     } else {
-      camera.position.lerp(desired, 0.12);
+      camera.position.lerp(desired, 0.1);
     }
-    camera.lookAt(target.x, target.y + 0.5, target.z);
+    camera.lookAt(target.x, target.y + 1.2, target.z);
   }
 
   getSpawnPoint(): THREE.Vector3 {

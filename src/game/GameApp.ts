@@ -10,12 +10,13 @@ const MAX_STEP = 1 / 30;
 export class GameApp {
   private readonly renderer: THREE.WebGLRenderer;
   private readonly scene: THREE.Scene;
-  private readonly camera: THREE.PerspectiveCamera;
+  private readonly camera: THREE.OrthographicCamera;
   private readonly clock: THREE.Clock;
   private readonly hud: Hud;
   private readonly input: InputController;
   private readonly world: World;
   private readonly player: Player;
+  private readonly frustumSize = 26;
 
   private running = false;
   private frameHandle = 0;
@@ -29,13 +30,13 @@ export class GameApp {
     this.renderer.shadowMap.enabled = true;
     this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     this.renderer.outputColorSpace = THREE.SRGBColorSpace;
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
 
     this.scene = new THREE.Scene();
     this.scene.fog = new THREE.FogExp2(0x09111f, 0.045);
     this.scene.background = new THREE.Color(0x060b14);
 
-    this.camera = new THREE.PerspectiveCamera(60, 1, 0.1, 200);
+    this.camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 200);
 
     this.clock = new THREE.Clock();
 
@@ -51,7 +52,7 @@ export class GameApp {
     this.scene.add(ambient);
 
     const sun = new THREE.DirectionalLight(0xfff6d4, 1.05);
-    sun.position.set(-6, 12, -8);
+    sun.position.set(-12, 18, 10);
     sun.castShadow = true;
     sun.shadow.mapSize.set(1024, 1024);
     sun.shadow.camera.near = 0.1;
@@ -94,7 +95,13 @@ export class GameApp {
     const height = this.canvas.clientHeight || window.innerHeight;
 
     this.renderer.setSize(width, height, false);
-    this.camera.aspect = width / Math.max(1, height);
+    const aspect = width / Math.max(1, height);
+    const halfHeight = this.frustumSize / 2;
+    const halfWidth = halfHeight * aspect;
+    this.camera.left = -halfWidth;
+    this.camera.right = halfWidth;
+    this.camera.top = halfHeight;
+    this.camera.bottom = -halfHeight;
     this.camera.updateProjectionMatrix();
   }
 
