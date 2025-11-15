@@ -14,14 +14,7 @@
     "types": ["vitest", "node"],
     "noEmit": true,
     "skipLibCheck": true,
-    "baseUrl": "./",
-    "paths": {
-      "@engine/*": ["src/engine/*"],
-      "@game/*": ["src/game/*"],
-      "@ui/*": ["src/ui/*"],
-      "@workers/*": ["src/workers/*"],
-      "@assets/*": ["src/assets/*"]
-    }
+    "baseUrl": "./"
   },
   "include": ["src", "tests", "vite.config.ts"],
   "references": [
